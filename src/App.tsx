@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  useRoutes,
+} from "react-router-dom";
+import CustomAppBar from "./Components/CustomAppBar";
+import CreaEvento from "./Schermate/Creazione/CreaEvento";
+import CreaLocale from "./Schermate/Creazione/CreaLocale";
+import Login from "./Schermate/Login";
+import ListaEventi from "./Schermate/Visualizzazione/ListaEventi";
+import Mappa from "./Schermate/Visualizzazione/Mappa";
 
-function App() {
+const App = () => {
+  let routes = useRoutes([
+    { path: "/login", element: <Login /> },
+    { path: "/creaEvento", element: <CreaEvento /> },
+    { path: "/creaLocale", element: <CreaLocale /> },
+    { path: "/", element: <Mappa /> },
+    { path: "/lista", element: <ListaEventi /> }
+
+  ]);
+  return routes;
+};
+
+
+
+const AppWrapper = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <App />
+      <CustomAppBar />
+    </Router>
   );
-}
+};
 
-export default App;
+export default AppWrapper;
