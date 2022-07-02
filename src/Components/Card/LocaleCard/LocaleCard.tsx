@@ -3,7 +3,8 @@ import { CardContent } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
-import Locale from "../../Utils/Classes/Locale";
+import Locale from '../../../Utils/Classes/Locale';
+
 
 interface LocaleCardProps {
     locale: Locale

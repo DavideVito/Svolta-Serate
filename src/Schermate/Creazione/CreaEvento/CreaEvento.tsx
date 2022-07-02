@@ -1,4 +1,5 @@
-import { Button, TextField } from "@mui/material";
+import { Alert, AlertTitle, Button, TextField } from "@mui/material";
+import { User } from "firebase/auth";
 import { FormikHelpers, useFormik } from 'formik';
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -27,8 +28,10 @@ const CreaEventoSchema = Yup.object().shape({
 const CreaEvento = () => {
 
     const [user, loading] = useAuthState(auth)
-
     const [locali, setLocali] = useState<Locale[]>([])
+    const [eventoCreato, setEventoCreato] = useState<Evento | undefined>(undefined)
+    const [erroreCreazione, setErroreCreazione] = useState<any | undefined>(undefined)
+
 
     useEffect(() => {
 
@@ -36,7 +39,7 @@ const CreaEvento = () => {
         Locale.getLocali().then(l => {
 
 
-            const customLocali = [new Locale("", "", new Posizione(0, 0), [], ""), ...l]
+            const customLocali = [new Locale("", "", new Posizione(0, 0), [], {} as User, ""), ...l]
             setLocali(customLocali)
         })
 
@@ -66,10 +69,12 @@ const CreaEvento = () => {
             const evento = new Evento(values.descrizioneEvento, new Date(values.dataEvento), user, locale)
 
             evento.save().then(() => {
-                alert("Creato il nuovo evento")
+                setEventoCreato(evento)
+                setTimeout(() => { setEventoCreato(undefined) }, 5000)
                 formik.resetForm()
             }).catch((e) => {
-                alert(`Errore nell'inserimento ${e.message}`)
+                setErroreCreazione(e)
+                setTimeout(() => { setErroreCreazione(undefined) }, 5000)
             })
         }
     });
@@ -114,7 +119,7 @@ const CreaEvento = () => {
             name="dataEvento"
 
             type="date"
-            value={formik.values.dataEvento.toISOString().split("T")[0]}
+            value={new Date(formik.values.dataEvento).toISOString().split("T")[0]}
             onChange={formik.handleChange}
             error={formik.touched.dataEvento && Boolean(formik.errors.dataEvento)}
         />
@@ -139,8 +144,28 @@ const CreaEvento = () => {
         </select>
 
         <Button color="primary" variant="contained" fullWidth type="submit">
-            Submit
+            Crea Evento
         </Button>
+
+
+        {eventoCreato &&
+            <Alert severity="success">
+                <AlertTitle>Successo!</AlertTitle>
+                <div>Evento <i>{eventoCreato.descrizione}</i> creato con successo</div>
+            </Alert>
+        }
+
+        {erroreCreazione && <Alert severity="error">
+            <AlertTitle>Errore!</AlertTitle>
+            <div>
+                Errore Creazione! <br />
+
+                {erroreCreazione.message}
+
+
+
+            </div>
+        </Alert>}
     </form>
 
 

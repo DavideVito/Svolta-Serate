@@ -1,4 +1,4 @@
-import { Button, TextField } from "@mui/material";
+import { Alert, AlertTitle, Button, TextField } from "@mui/material";
 import { useFormik } from 'formik';
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -44,8 +44,10 @@ const CreaLocaleSchema = Yup.object().shape({
 const CreaLocale = () => {
 
     const [user] = useAuthState(auth)
-
     const [postoSelezionato, sps] = useState<Place | undefined>(undefined)
+    const [localeCreato, setLocaleCreato] = useState<Locale | undefined>(undefined)
+    const [erroreCreazione, setErroreCreazione] = useState<any | undefined>(undefined)
+
 
     const setPostoSelezionato = (data: any) => {
 
@@ -80,11 +82,25 @@ const CreaLocale = () => {
             }: Values,
         ) => {
 
+            debugger
+
+            if (!user) return
+
             const posizione = new Posizione(latitudine, longitudine)
 
-            const locale = new Locale(nome, descrizione, posizione, info);
+            const locale = new Locale(nome, descrizione, posizione, info, user);
 
-            locale.save().then(() => { alert("salveto") }).catch(e => console.error(e))
+            locale.save().then(() => {
+
+                setLocaleCreato(locale)
+
+                setTimeout(() => { setLocaleCreato(undefined) }, 5000)
+
+
+            }).catch(e => {
+                setErroreCreazione(e)
+                setTimeout(() => { setErroreCreazione(undefined) }, 5000)
+            })
 
 
 
@@ -135,8 +151,25 @@ const CreaLocale = () => {
         </div>
         }
         <Button color="primary" variant="contained" fullWidth type="submit">
-            Submit
+            Crea Locale
         </Button>
+
+        {localeCreato && <Alert severity="success">
+            <AlertTitle>Successo!</AlertTitle>
+            Locale <i>{localeCreato.descrizione}</i> creato con successo
+        </Alert>}
+
+        {erroreCreazione && <Alert severity="error">
+            <AlertTitle>Errore!</AlertTitle>
+            <div>
+                Errore Creazione! <br />
+
+                {erroreCreazione.message}
+
+
+
+            </div>
+        </Alert>}
     </form>
 
 }

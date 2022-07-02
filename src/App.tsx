@@ -1,33 +1,111 @@
+import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
+import React, { Suspense, useMemo } from "react";
 import {
   BrowserRouter as Router,
   useRoutes,
 } from "react-router-dom";
 import CustomAppBar from "./Components/CustomAppBar";
-import CreaEvento from "./Schermate/Creazione/CreaEvento";
-import CreaLocale from "./Schermate/Creazione/CreaLocale";
-import Login from "./Schermate/Login";
-import ListaEventi from "./Schermate/Visualizzazione/ListaEventi";
-import Mappa from "./Schermate/Visualizzazione/Mappa";
+
+
+import { lazy } from "react"
+import Loading from "./Components/Loading";
+
+
+
+
+
+
+
+const CreaEvento = lazy(() => import("./Schermate/Creazione/CreaEvento"))
+const CreaLocale = lazy(() => import("./Schermate/Creazione/CreaLocale"));
+const Login = lazy(() => import("./Schermate/Login"));
+const DettagliLocale = lazy(() => import("./Schermate/Visualizzazione/DettagliLocale"));
+const ListaEventi = lazy(() => import("./Schermate/Visualizzazione/ListaEventi"));
+const Mappa = lazy(() => import("./Schermate/Visualizzazione/Mappa"));
+
+
+
+
+const SuspenseWrapper = ({ children }: { children: React.ReactNode }) => <Suspense fallback={<Loading />}>{children}</Suspense>
+
 
 const App = () => {
   let routes = useRoutes([
-    { path: "/login", element: <Login /> },
-    { path: "/creaEvento", element: <CreaEvento /> },
-    { path: "/creaLocale", element: <CreaLocale /> },
-    { path: "/", element: <Mappa /> },
-    { path: "/lista", element: <ListaEventi /> }
+    { path: "/login", element: <SuspenseWrapper><Login /></SuspenseWrapper> },
+    { path: "/creaEvento", element: <SuspenseWrapper ><CreaEvento /></SuspenseWrapper> },
+    {
+      path: "/creaLocale", element: <SuspenseWrapper>
+        <CreaLocale />
+      </SuspenseWrapper>
+    },
+    {
+      path: "/", element: <SuspenseWrapper>
+        <Mappa />
+      </SuspenseWrapper>
+    },
+    {
+      path: "/lista", element: <SuspenseWrapper>
+        <ListaEventi />
+      </SuspenseWrapper>
+    },
+    {
+      path: "/locale/:id", element: <SuspenseWrapper>
+        <DettagliLocale />
+      </SuspenseWrapper>
+    }
 
   ]);
   return routes;
 };
 
 
+const lightTheme = createTheme({
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#640ff7",
+    },
+    background: {
+      default: "#004ecc",
+      paper: "#73a9ff",
+    },
+    secondary: {
+      main: "#f44336",
+    },
+  },
+});
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#29ffff",
+    },
+    background: {
+      default: "#1c273a",
+      paper: "#273652",
+    },
+    secondary: {
+      main: "#f44336",
+    },
+  },
+});
 
 const AppWrapper = () => {
+
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const theme = useMemo(() => {
+    const tema = prefersDarkMode ? darkTheme : lightTheme;
+
+    return tema;
+  }, [prefersDarkMode]);
   return (
     <Router>
-      <App />
-      <CustomAppBar />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+        <CustomAppBar />
+      </ThemeProvider>
     </Router>
   );
 };

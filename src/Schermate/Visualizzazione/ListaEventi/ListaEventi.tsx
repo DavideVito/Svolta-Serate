@@ -4,6 +4,7 @@ import Evento from "../../../Utils/Classes/Evento";
 
 
 import InfiniteScroll from 'react-infinite-scroll-component';
+import EventCard from "../../../Components/Card/EventCard";
 
 const INCREMENTO = 10
 
@@ -46,18 +47,7 @@ function ListaEventi() {
 
       {
 
-        eventi.map((evento: Evento) =>
-          <div key={evento.id}>
-            <h3>{evento.id}</h3>
-            <h2>{evento.descrizione}</h2>
-            <p>{evento.data.toLocaleString()}</p>
-            <p>Location: {evento.locale.nome}</p>
-            <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
-              <p>Lat: {evento.locale.posizione.latitudine}</p>
-              <p>Lng: {evento.locale.posizione.longitudine}</p>
-            </div>
-          </div>
-        )
+        eventi.map((evento: Evento) => <EventCard evento={evento} />)
 
 
 

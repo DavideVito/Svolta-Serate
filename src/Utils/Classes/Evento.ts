@@ -31,6 +31,7 @@ const eventoConverter = {
 
 export default class Evento {
 
+
     descrizione: string;
     data: Date;
     creatore: User
@@ -58,6 +59,27 @@ export default class Evento {
 
     }
 
+
+    static async getEventiCreatiDaUtente(user: User): Promise<Evento[]> {
+
+        const ref = collection(firestore, "Eventi").withConverter(eventoConverter)
+
+
+
+        const constraints = [
+            where("creatore.uid", "==", user.uid)
+        ]
+
+
+
+        const snapshot = await getDocs(query(ref, ...constraints))
+
+        const { docs } = snapshot
+
+        return docs.map(documento => documento.data())
+
+
+    }
 
     static getEventi = async (max: number): Promise<Evento[]> => {
 

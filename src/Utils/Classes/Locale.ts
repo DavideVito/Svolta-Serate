@@ -1,6 +1,7 @@
-import { addDoc, collection, orderBy, startAt, endAt, getDocs, query } from "firebase/firestore";
+import { addDoc, collection, orderBy, startAt, endAt, getDocs, query, where, getDoc, doc } from "firebase/firestore";
 import { firestore } from "../Firebase/init";
 import { geohashForLocation, geohashQueryBounds, distanceBetween } from "geofire-common"
+import { User } from "firebase/auth";
 
 
 const localeConverter = {
@@ -22,7 +23,8 @@ const localeConverter = {
             geohash: hash,
             posizione: locale.posizione.toJSON(),
 
-            id: locale.id
+            id: locale.id,
+            creatore: locale.creatore.toJSON()
 
         };
 
@@ -39,6 +41,7 @@ const localeConverter = {
             data.descrizione,
             data.posizione,
             data.altreInfo,
+            data.creatore,
             snapshot.id
 
         );
@@ -79,11 +82,14 @@ export class AltreInfo {
 
 export default class Locale {
 
+
+
     nome: string
     descrizione: string
     posizione: Posizione
     altreInfo: AltreInfo[]
     id: string | undefined
+    creatore: User
 
 
     toJSON() {
@@ -98,12 +104,15 @@ export default class Locale {
     }
 
 
-    constructor(nome: string, descrizione: string, posizione: Posizione, altreInfo: AltreInfo[], id?: string) {
+
+
+    constructor(nome: string, descrizione: string, posizione: Posizione, altreInfo: AltreInfo[], creatore: User, id?: string) {
         this.nome = nome
         this.descrizione = descrizione
         this.posizione = posizione
         this.altreInfo = altreInfo
         this.id = id
+        this.creatore = creatore
     }
 
 
@@ -113,12 +122,39 @@ export default class Locale {
 
         const ref = collection(firestore, "Locale").withConverter(localeConverter)
 
-
-
-
-
-
         return await addDoc(ref, this)
+
+
+    }
+
+    static async getLocale(id: string): Promise<Locale | undefined> {
+
+        const docRef = doc(firestore, "Locale", id).withConverter(localeConverter)
+        const docSnap = await getDoc(docRef);
+
+
+        return docSnap.data()
+
+    }
+
+
+    static async getLocaliCreatiDaUtente(user: User): Promise<Locale[]> {
+
+        const ref = collection(firestore, "Locale").withConverter(localeConverter)
+
+
+
+        const constraints = [
+            where("creatore.uid", "==", user.uid)
+        ]
+
+
+
+        const snapshot = await getDocs(query(ref, ...constraints))
+
+        const { docs } = snapshot
+
+        return docs.map(documento => documento.data())
 
 
     }

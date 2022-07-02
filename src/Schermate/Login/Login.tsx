@@ -5,6 +5,7 @@ import { auth } from "../../Utils/Firebase/init"
 import { useAuthState } from "react-firebase-hooks/auth"
 
 import { GoogleAuthProvider } from "firebase/auth";
+import UserPage from "../UserPage";
 
 
 
@@ -40,11 +41,7 @@ function SignInScreen() {
 
 
   if (user) {
-
-    return <div>
-      Ciao {user.displayName}
-      <button onClick={() => { auth.signOut() }}>Logout</button>
-    </div>
+    return <UserPage />
 
   }
 
