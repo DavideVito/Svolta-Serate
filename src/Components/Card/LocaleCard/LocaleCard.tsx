@@ -23,6 +23,8 @@ export default function LocaleCard({ locale }: LocaleCardProps) {
                 </Typography>
             </CardContent>
 
+
+
         </Card>
     );
 }

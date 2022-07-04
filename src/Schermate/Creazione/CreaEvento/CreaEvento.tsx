@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate } from "react-router-dom";
 import * as Yup from "yup"
+import DateInput from "../../../Components/DateInput";
 import Loading from "../../../Components/Loading";
 import Evento from "../../../Utils/Classes/Evento";
 import Locale, { Posizione } from "../../../Utils/Classes/Locale";
@@ -31,6 +32,7 @@ const CreaEvento = () => {
     const [locali, setLocali] = useState<Locale[]>([])
     const [eventoCreato, setEventoCreato] = useState<Evento | undefined>(undefined)
     const [erroreCreazione, setErroreCreazione] = useState<any | undefined>(undefined)
+    const [dataInizio, setDataInizio] = useState<Date | undefined>(undefined)
 
 
     useEffect(() => {
@@ -65,8 +67,9 @@ const CreaEvento = () => {
 
             if (!locale) return
 
+            if (!dataInizio) return
 
-            const evento = new Evento(values.descrizioneEvento, new Date(values.dataEvento), user, locale)
+            const evento = new Evento({ descrizione: values.descrizioneEvento, data: dataInizio, creatore: user, locale: locale })
 
             evento.save().then(() => {
                 setEventoCreato(evento)
@@ -78,20 +81,6 @@ const CreaEvento = () => {
             })
         }
     });
-
-    // const [opzioni, setOpzioni] = useState<{ value: string, label: string }[]>([])
-
-    // useEffect(() => {
-
-
-    //     const customOpzioni = locali.map((locale: Locale) => { return { value: locale.id!, label: locale.nome } })
-
-
-    //     setOpzioni(customOpzioni)
-
-    // }, [locali])
-
-
 
     if (loading) {
         return <Loading />
@@ -112,17 +101,18 @@ const CreaEvento = () => {
             error={formik.touched.descrizioneEvento && Boolean(formik.errors.descrizioneEvento)}
             helperText={formik.touched.descrizioneEvento && formik.errors.descrizioneEvento}
         />
-        <TextField
-            fullWidth
 
-            id="dataEvento"
-            name="dataEvento"
+        <div style={{ display: "grid", gap: "1.5rem", gridTemplateColumns: "minmax(5rem, 1fr)" }}>
+            <DateInput
+                label="Inzio"
+                date={dataInizio}
+                setDate={setDataInizio}
+                renderInput={(params) => <TextField {...params} />}
 
-            type="date"
-            value={new Date(formik.values.dataEvento).toISOString().split("T")[0]}
-            onChange={formik.handleChange}
-            error={formik.touched.dataEvento && Boolean(formik.errors.dataEvento)}
-        />
+            />
+        </div>
+
+
 
         <select
             id="idLocale"
@@ -184,5 +174,7 @@ const CreaEvento = () => {
 
 
 }
+
+
 
 export default CreaEvento

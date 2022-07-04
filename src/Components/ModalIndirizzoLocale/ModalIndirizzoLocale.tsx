@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import { Alert, AlertTitle, TextField } from '@mui/material';
-import { EMPTY_PLACE, Place, searchPlace } from '../../Functions/SearchPlace';
+import { EMPTY_PLACE, Place, searchPlace } from '../../Utils/Functions/SearchPlace';
 
 const style = {
     position: 'absolute',
@@ -36,6 +36,7 @@ export default function ModalIndirizzoLocale({ postoSelezionato, setPostoSelezio
     const [postiTrovati, setPostiTrovati] = useState<Place[]>([])
 
 
+
     const handleChange = (event: any) => {
 
         const [latitude, longitude] = event.target.value.split(":")
@@ -60,7 +61,7 @@ export default function ModalIndirizzoLocale({ postoSelezionato, setPostoSelezio
 
     return (
         <>
-            <Button onClick={handleOpen}>Inserisci Indirizo</Button>
+            <Button onClick={handleOpen}>Inserisci Indirizzo</Button>
             <Modal
                 open={open}
                 onClose={handleClose}

@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react';
 import { GeolocateControl, GeolocateResultEvent, Marker } from 'react-map-gl';
 import CustomMap from '../../../Components/CustomMap';
-import ModalInformazioniLocale from '../../../Components/ModalInformazioniLocale';
+import ModalInformazioniEvento from '../../../Components/ModalInformazioniEvento';
+import Evento from '../../../Utils/Classes/Evento';
 import Locale, { Posizione } from '../../../Utils/Classes/Locale';
 import Pin from './Pin';
 
@@ -11,21 +12,27 @@ import Pin from './Pin';
 export const Mappa = () => {
 
 
-    const [locali, setLocali] = useState<Locale[] | undefined>(undefined)
-    const [locale, setLocale] = useState<Locale | undefined>(undefined);
+    const [eventi, setEventi] = useState<Evento[] | undefined>(undefined)
+    const [evento, setEvento] = useState<Evento | undefined>(undefined);
 
     const callbackPosizione = useCallback((position: GeolocateResultEvent) => {
 
 
-        const lat = position.coords.latitude
-        const lng = position.coords.longitude
-
-        const locali = Locale.getLocaliVicinoPosizione(new Posizione(lat, lng), 100 * 1000)
+        const cb = async () => {
 
 
-        locali.then(console.log)
-        locali.then((l) => setLocali(l))
+            const lat = position.coords.latitude
+            const lng = position.coords.longitude
 
+            const locali = await Locale.getLocaliVicinoPosizione(new Posizione(lat, lng), 100 * 1000)
+
+            const evt = await Evento.getEventiDeiLocali(locali)
+
+            setEventi(evt)
+
+        }
+
+        cb()
     }, [])
 
     const geolocateControlRef = useCallback((ref: any) => {
@@ -52,14 +59,13 @@ export const Mappa = () => {
 
 
             {
-                locali && locali.map((locale: Locale) => <Marker
-                    key={`marker-${locale.id}`}
-                    longitude={locale.posizione.longitudine}
-                    latitude={locale.posizione.latitudine}
+                eventi && eventi.map((evento: Evento) => <Marker
+                    key={`marker-${evento.id}`}
+                    longitude={evento.locale.posizione.longitudine}
+                    latitude={evento.locale.posizione.latitudine}
                     anchor="bottom"
                     onClick={() => {
-                        console.log(locale)
-                        setLocale(locale);
+                        setEvento(evento)
                     }}
                 >
                     <Pin />
@@ -73,7 +79,7 @@ export const Mappa = () => {
             }
         </CustomMap>
 
-        {locale && <ModalInformazioniLocale locale={locale} setLocale={setLocale} />}
+        {evento && <ModalInformazioniEvento evento={evento} setEvento={setEvento} />}
     </>
 }
 

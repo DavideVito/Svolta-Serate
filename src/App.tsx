@@ -1,14 +1,15 @@
 import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
-import React, { Suspense, useMemo } from "react";
+import { useMemo } from "react";
 import {
   BrowserRouter as Router,
   useRoutes,
 } from "react-router-dom";
-import CustomAppBar from "./Components/CustomAppBar";
+import CustomAppBar from "./Components/AppBar/BottomAppBar";
 
 
 import { lazy } from "react"
-import Loading from "./Components/Loading";
+import UpperAppBar from "./Components/AppBar/UpperAppBar";
+import SuspenseWrapper from "./Components/SuspenseWrapper/SuspenseWrapper";
 
 
 
@@ -26,7 +27,6 @@ const Mappa = lazy(() => import("./Schermate/Visualizzazione/Mappa"));
 
 
 
-const SuspenseWrapper = ({ children }: { children: React.ReactNode }) => <Suspense fallback={<Loading />}>{children}</Suspense>
 
 
 const App = () => {
@@ -45,6 +45,7 @@ const App = () => {
     },
     {
       path: "/lista", element: <SuspenseWrapper>
+        <UpperAppBar text="Eventi in programma" />
         <ListaEventi />
       </SuspenseWrapper>
     },

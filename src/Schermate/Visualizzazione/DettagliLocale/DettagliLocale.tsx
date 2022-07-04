@@ -47,21 +47,18 @@ export const DettagliLocale = () => {
             </div>
 
             <div>
-                <CustomMap posizione={locale.posizione} zoom={13.5} widthHeight={{ width: "45vw", height: "45vh" }} >
-                    <div>
-
-                        <Marker
-                            key={`marker-${locale.id}`}
-                            longitude={locale.posizione.longitudine}
-                            latitude={locale.posizione.latitudine}
-                            anchor="bottom"
-                        >
-                            <Pin />
-                        </Marker>
-                    </div>
-
+                <CustomMap posizione={locale.posizione} zoom={13.5} widthHeight={{ width: "100vw", height: "45vh" }} >
+                    <Marker
+                        key={`marker-${locale.id}`}
+                        longitude={locale.posizione.longitudine}
+                        latitude={locale.posizione.latitudine}
+                        anchor="bottom"
+                    >
+                        <Pin />
+                    </Marker>
                 </CustomMap>
             </div>
+
         </div >
     </div >
 

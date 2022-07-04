@@ -1,35 +1,39 @@
 import { Card, CardContent, Typography } from "@mui/material"
 import { Link } from "react-router-dom"
 import Evento from "../../../Utils/Classes/Evento"
+import { formattaData } from "../../../Utils/Functions/Formattatori"
 import LocaleCard from "../LocaleCard"
 
-interface EventCardProps {
+interface EventoCardProps {
     evento: Evento,
+    withLocaleButton?: boolean
 
 }
 
-const EventCard = ({ evento }: EventCardProps) => {
-
-
-
+const EventoCard = ({ evento, withLocaleButton = true }: EventoCardProps) => {
 
     return <Card>
 
         <CardContent>
             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                {evento.data.toLocaleString()}
+                {formattaData(evento.data)}
             </Typography>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography variant="h5" component="div">
                     {evento.descrizione}
                 </Typography>
-                <Link to={`/locale/${evento.locale.id}`}>
-                    <LocaleCard locale={evento.locale} />
-                </Link>
+
+                {
+                    withLocaleButton && <Link to={`/locale/${evento.locale.id}`}>
+                        <LocaleCard locale={evento.locale} />
+                    </Link>
+                }
+
+
             </div>
 
         </CardContent>
     </Card>
 }
 
-export default EventCard
+export default EventoCard

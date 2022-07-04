@@ -9,8 +9,8 @@ import ListIcon from '@mui/icons-material/List';
 import { AccountCircle } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../Utils/Firebase/init";
-import CustomAddMenu from "../CustomAddMenu";
+import { auth } from "../../../Utils/Firebase/init";
+import CustomAddMenu from "../../CustomAddMenu";
 import { useState } from "react";
 
 const StyledFab = styled(Fab)({
@@ -22,7 +22,7 @@ const StyledFab = styled(Fab)({
     margin: '0 auto',
 });
 
-const CustomAppBar = () => {
+const BottomAppBar = () => {
 
     const [user, loading] = useAuthState(auth);
 
@@ -83,4 +83,4 @@ const CustomAppBar = () => {
     </AppBar >
 }
 
-export default CustomAppBar
+export default BottomAppBar
