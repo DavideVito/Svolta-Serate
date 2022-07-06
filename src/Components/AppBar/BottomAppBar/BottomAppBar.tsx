@@ -35,7 +35,7 @@ const BottomAppBar = () => {
 
 
 
-    return <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
+    return <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0 }}>
         <Toolbar sx={{ justifyContent: "space-between", display: "flex", gap: "1rem" }}>
 
             <Link to="/" style={{ color: "white" }}>
@@ -50,7 +50,7 @@ const BottomAppBar = () => {
                 </IconButton>
             </Link>
 
-            <StyledFab color="secondary" aria-label="add" onClick={handleClick}>
+            <StyledFab color="primary" aria-label="add" onClick={handleClick}>
                 <AddIcon />
             </StyledFab>
 
@@ -82,5 +82,6 @@ const BottomAppBar = () => {
         </Toolbar>
     </AppBar >
 }
+
 
 export default BottomAppBar

@@ -1,20 +1,16 @@
 import { Alert, Typography } from "@mui/material"
-import { Marker } from "react-map-gl"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import CustomMap from "../../../Components/Maps/CustomMap"
-import Locale from "../../../Utils/Classes/Locale"
-import Pin from "../Mappa/Pin"
+import UpperAppBar from "../../../Components/AppBar/UpperAppBar"
+import Evento from "../../../Utils/Classes/Evento"
+import DettagliLocale from "../DettagliLocale"
 
-interface DettagliLocaleProps {
-    propLocale?: Locale
-}
 
-export const DettagliLocale = ({ propLocale }: DettagliLocaleProps) => {
+export const DettagliEvento = () => {
 
-    const { idLocale = "" } = useParams()
+    const { idEvento = "" } = useParams()
 
-    const [locale, setlocale] = useState<Locale | undefined>(propLocale)
+    const [evento, setEvento] = useState<Evento | undefined>(undefined)
 
     useEffect(() => {
 
@@ -24,63 +20,49 @@ export const DettagliLocale = ({ propLocale }: DettagliLocaleProps) => {
         }, 1000)
 
 
-    }, [locale])
+    }, [evento])
 
-    useEffect(() => { console.log(locale) }, [locale])
+
 
     useEffect(() => {
 
-        if (idLocale === "") return
+        if (idEvento === "") return
 
-        Locale.getLocale(idLocale).then((l) => setlocale(l))
-
-    }, [idLocale])
+        Evento.getEvento(idEvento).then(e => setEvento(e))
 
 
-    if (!locale) return <Alert severity="error">
-        <strong>Locale non trovato</strong>
+    }, [idEvento])
+
+
+    if (!evento) return <Alert severity="error">
+        <strong>Evento non trovato</strong>
     </Alert>
 
 
 
     return <>
-
-
+        <UpperAppBar text={evento.descrizione} />
         <div style={{ display: "flex", justifyContent: "center", flexDirection: "column" }}>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-                <div style={{ display: "flex", justifyContent: "center" }}>
+                {/* <div style={{ display: "flex", justifyContent: "center" }}>
                     <div style={{ display: "flex", flexDirection: "column" }}>
 
                         <Typography align="center" variant="h3">
-                            {locale.nome}
+                            {evento.descrizione}
                         </Typography>
 
-                        <Typography align="center">
-                            {locale.descrizione}
-                        </Typography></div>
-                </div>
+                    </div>
+                </div> */}
 
-                <div>
-                    <CustomMap posizione={locale.posizione} zoom={13.5} widthHeight={{ width: "100vw", height: "45vh" }} >
-                        <Marker
-                            key={`marker-${locale.id}`}
-                            longitude={locale.posizione.longitudine}
-                            latitude={locale.posizione.latitudine}
-                            anchor="bottom"
-                        >
-                            <Pin />
-                        </Marker>
-                    </CustomMap>
-                </div>
 
-                <div>
+
+                <div style={{ display: "flex", justifyContent: "center" }}>
                     <blockquote
 
-                        onLoad={console.log}
                         className="instagram-media"
                         data-instgrm-captioned
-                        data-instgrm-permalink="https://www.instagram.com/p/CdVbZ3HsUax/?utm_source=ig_embed"
+                        data-instgrm-permalink={evento.linkLocandina}
                         data-instgrm-version={14}
                         style={{
                             background: "#FFF",
@@ -97,7 +79,7 @@ export const DettagliLocale = ({ propLocale }: DettagliLocaleProps) => {
                         <div style={{ padding: "16px" }}>
                             {" "}
                             <a
-                                href="https://www.instagram.com/p/CdVbZ3HsUax/?utm_source=ig_embed&utm_campaign=loading"
+                                href={evento.linkLocandina}
                                 style={{
                                     background: "#FFFFFF",
                                     lineHeight: 0,
@@ -334,7 +316,7 @@ export const DettagliLocale = ({ propLocale }: DettagliLocaleProps) => {
                                 }}
                             >
                                 <a
-                                    href="https://www.instagram.com/p/CdVbZ3HsUax/?utm_source=ig_embed&utm_campaign=loading"
+                                    href="https://www.instagram.com/p/Cfr2QhAOVTB/?utm_source=ig_web_copy_link"
                                     style={{
                                         color: "#c9c8cd",
                                         fontFamily: "Arial,sans-serif",
@@ -352,6 +334,11 @@ export const DettagliLocale = ({ propLocale }: DettagliLocaleProps) => {
                         </div>
                     </blockquote>
 
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    <Typography variant="h3" color="primary" fontWeight={"bolder"} align="center">Locale</Typography>
+                    <DettagliLocale propLocale={evento.locale} />
                 </div>
             </div >
         </div ></>

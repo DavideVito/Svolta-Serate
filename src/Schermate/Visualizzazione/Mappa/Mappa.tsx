@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { GeolocateControl, GeolocateResultEvent, Marker } from 'react-map-gl';
-import CustomMap from '../../../Components/CustomMap';
+import CustomMap from '../../../Components/Maps/CustomMap';
 import ModalInformazioniEvento from '../../../Components/ModalInformazioniEvento';
 import Evento from '../../../Utils/Classes/Evento';
 import Locale, { Posizione } from '../../../Utils/Classes/Locale';

@@ -19,9 +19,9 @@ const EventoCard = ({ evento, withLocaleButton = true }: EventoCardProps) => {
                 {formattaData(evento.data)}
             </Typography>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="h5" component="div">
+                <Link style={{ textDecoration: "none" }} color="primary" to={`/evento/${evento.id}`} ><Typography variant="h5" component="div">
                     {evento.descrizione}
-                </Typography>
+                </Typography></Link>
 
                 {
                     withLocaleButton && <Link to={`/locale/${evento.locale.id}`}>

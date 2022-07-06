@@ -16,7 +16,7 @@ import SuspenseWrapper from "./Components/SuspenseWrapper/SuspenseWrapper";
 
 
 
-
+const DettagliEvento = lazy(() => import("./Schermate/Visualizzazione/DettagliEvento"));
 const CreaEvento = lazy(() => import("./Schermate/Creazione/CreaEvento"))
 const CreaLocale = lazy(() => import("./Schermate/Creazione/CreaLocale"));
 const Login = lazy(() => import("./Schermate/Login"));
@@ -50,8 +50,14 @@ const App = () => {
       </SuspenseWrapper>
     },
     {
-      path: "/locale/:id", element: <SuspenseWrapper>
+      path: "/locale/:idLocale", element: <SuspenseWrapper>
         <DettagliLocale />
+      </SuspenseWrapper>
+    }
+    ,
+    {
+      path: "/evento/:idEvento", element: <SuspenseWrapper>
+        <DettagliEvento />
       </SuspenseWrapper>
     }
 
@@ -63,15 +69,20 @@ const App = () => {
 const lightTheme = createTheme({
   palette: {
     mode: "light",
+    text: {
+      primary: "#000",
+    },
     primary: {
-      main: "#640ff7",
+      main: "#FFD046",
+
+
     },
     background: {
-      default: "#004ecc",
-      paper: "#73a9ff",
+      default: "#EADAA2",
+      paper: "#CE6C47",
     },
     secondary: {
-      main: "#f44336",
+      main: "#CE6C47",
     },
   },
 });

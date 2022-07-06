@@ -1,6 +1,6 @@
 import { Alert, AlertTitle, Button, TextField } from "@mui/material";
 import { User } from "firebase/auth";
-import { FormikHelpers, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate } from "react-router-dom";
@@ -15,6 +15,7 @@ import { auth } from "../../../Utils/Firebase/init";
 interface Values {
     descrizioneEvento: string;
     dataEvento: Date,
+    linkLocandina: string,
     idLocale: string
 }
 
@@ -24,6 +25,7 @@ const CreaEventoSchema = Yup.object().shape({
     descrizioneEvento: Yup.string()
         .min(10, 'Troppo corto')
         .required('Questo campo è richiesto'),
+    linkLocandina: Yup.string().url()
 });
 
 const CreaEvento = () => {
@@ -53,14 +55,14 @@ const CreaEvento = () => {
         initialValues: {
             descrizioneEvento: "",
             dataEvento: new Date(),
-            idLocale: ""
+            idLocale: "",
+            linkLocandina: ""
         },
         validationSchema: CreaEventoSchema,
         onSubmit: (
-            values: Values,
-            { setSubmitting }: FormikHelpers<Values>
+            values: Values
         ) => {
-
+            debugger
 
             if (!user) return
             const locale = locali.find(locale => locale.id === values.idLocale)
@@ -69,7 +71,8 @@ const CreaEvento = () => {
 
             if (!dataInizio) return
 
-            const evento = new Evento({ descrizione: values.descrizioneEvento, data: dataInizio, creatore: user, locale: locale })
+
+            const evento = new Evento({ descrizione: values.descrizioneEvento, data: dataInizio, creatore: user, locale: locale, linkLocandina: values.linkLocandina })
 
             evento.save().then(() => {
                 setEventoCreato(evento)
@@ -132,6 +135,18 @@ const CreaEvento = () => {
             }
 
         </select>
+
+        <TextField
+            fullWidth
+            id="linkLocandina"
+            name="linkLocandina"
+            label="Link Locandina Instagram"
+            value={formik.values.linkLocandina}
+            onChange={formik.handleChange}
+            error={formik.touched.linkLocandina && Boolean(formik.errors.linkLocandina)}
+            helperText={formik.touched.linkLocandina && formik.errors.linkLocandina}
+        />
+
 
         <Button color="primary" variant="contained" fullWidth type="submit">
             Crea Evento

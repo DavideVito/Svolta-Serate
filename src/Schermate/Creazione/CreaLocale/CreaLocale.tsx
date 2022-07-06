@@ -16,7 +16,7 @@ import UpperAppBar from "../../../Components/AppBar/UpperAppBar";
 
 
 
-const CustomMap = lazy(() => import("../../../Components/CustomMap"))
+const CustomMap = lazy(() => import("../../../Components/Maps/CustomMap"))
 
 
 

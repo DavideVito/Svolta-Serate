@@ -81,7 +81,7 @@ const LocaliCreatiComponent = ({ user }: { user: User }) => {
         <div style={{ display: "grid", gap: "1.5rem", gridTemplateColumns: "minmax(5rem, 1fr)" }}>
 
             {localiCreati.map((locale: Locale) => <Card key={locale.id} sx={{ minWidth: 275 }}>
-                <CardContent>
+                <CardContent >
                     <Typography variant="h5" component="div">
                         {locale.nome}
                     </Typography>

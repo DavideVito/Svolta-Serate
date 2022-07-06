@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { addDoc, collection, getDocs, orderBy, query, where, limitToLast } from "firebase/firestore";
+import { addDoc, collection, getDocs, orderBy, query, where, limitToLast, getDoc, doc } from "firebase/firestore";
 import moment from "moment";
 import { firestore } from "../Firebase/init";
 import Locale from "./Locale";
@@ -14,6 +14,7 @@ const eventoConverter = {
         const ogg = {
             descrizione: evento.descrizione, data: evento.data,
             creatore: creatore,
+            linkLocandina: evento.linkLocandina,
             locale: evento.locale.toJSON()
         }
 
@@ -24,7 +25,7 @@ const eventoConverter = {
 
 
 
-        return new Evento({ descrizione: data.descrizione, data: data.data.toDate(), creatore: data.creatore, locale: data.locale, id: snapshot.id });
+        return new Evento({ descrizione: data.descrizione, data: data.data.toDate(), creatore: data.creatore, locale: data.locale, linkLocandina: data.linkLocandina, id: snapshot.id });
     }
     ,
 
@@ -38,6 +39,7 @@ interface ConstructorParams {
     //dataInizio: Date
     //dataFine: Date
     creatore: User
+    linkLocandina: string,
     locale: Locale
     id?: string
 }
@@ -47,19 +49,23 @@ export default class Evento {
 
     descrizione: string;
     data: Date;
-
     creatore: User
     locale: Locale
+    linkLocandina: string
     id: string | undefined
 
 
-    constructor({ descrizione, data, creatore, locale, id }: ConstructorParams) {
+    constructor({ descrizione, data, creatore, locale, linkLocandina, id }: ConstructorParams) {
+
+
+
         this.descrizione = descrizione
 
         this.data = data
 
         this.creatore = creatore;
         this.locale = locale
+        this.linkLocandina = linkLocandina
         this.id = id
     }
 
@@ -144,6 +150,19 @@ export default class Evento {
         const { docs } = snapshot
 
         return docs.map(documento => documento.data())
+
+    }
+
+
+    static getEvento = async (id: string): Promise<Evento | undefined> => {
+
+
+
+        const docRef = doc(firestore, KEY_COLLECTION, id).withConverter(eventoConverter)
+        const docSnap = await getDoc(docRef);
+
+
+        return docSnap.data()
 
     }
 
