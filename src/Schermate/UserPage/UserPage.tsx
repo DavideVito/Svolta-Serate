@@ -7,6 +7,7 @@ import UserCard from "../../Components/Card/UserCard"
 import Evento from "../../Utils/Classes/Evento";
 import Locale from "../../Utils/Classes/Locale";
 import { auth } from "../../Utils/Firebase/init";
+import { formattaData } from "../../Utils/Functions/Formattatori";
 
 
 const EventiCreatiComponent = ({ user }: { user: User }) => {
@@ -34,9 +35,12 @@ const EventiCreatiComponent = ({ user }: { user: User }) => {
             {eventiCreati.map((evento: Evento) => <Card key={evento.id} sx={{ minWidth: 275 }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                        {evento.data.toLocaleString()}
+                        {formattaData(evento.data)}
                     </Typography>
-                    <Typography variant="h5" component="div">
+                    <Typography variant="h4" component="div">
+                        {evento.nome}
+                    </Typography>
+                    <Typography variant="h6" component="div">
                         {evento.descrizione}
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">

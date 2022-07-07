@@ -1,6 +1,5 @@
 import { Alert, AlertTitle, Button, TextField } from "@mui/material";
 import { User } from "firebase/auth";
-import { getDownloadURL, StorageError, UploadTaskSnapshot } from "firebase/storage";
 import { useFormik } from 'formik';
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -8,15 +7,14 @@ import { Navigate } from "react-router-dom";
 import * as Yup from "yup"
 import UpperAppBar from "../../../Components/AppBar/UpperAppBar";
 import DateInput from "../../../Components/DateInput";
-import FileUploader from "../../../Components/FileUploader";
 import Loading from "../../../Components/Loading";
 import Evento from "../../../Utils/Classes/Evento";
 import Locale, { Posizione } from "../../../Utils/Classes/Locale";
 import { auth } from "../../../Utils/Firebase/init";
-import { uploadFile } from "../../../Utils/Functions/UploadFile";
 
 
 interface Values {
+    nome: string,
     descrizioneEvento: string;
     dataEvento: Date,
     linkLocandina: string,
@@ -26,6 +24,7 @@ interface Values {
 
 
 const CreaEventoSchema = Yup.object().shape({
+    nome: Yup.string().required().max(10),
     descrizioneEvento: Yup.string()
         .min(10, 'Troppo corto')
         .required('Questo campo è richiesto'),
@@ -39,7 +38,6 @@ const CreaEvento = () => {
     const [eventoCreato, setEventoCreato] = useState<Evento | undefined>(undefined)
     const [erroreCreazione, setErroreCreazione] = useState<any | undefined>(undefined)
     const [dataInizio, setDataInizio] = useState<Date | undefined>(undefined)
-    const [file, setFile] = useState<File | undefined>(undefined)
 
 
     useEffect(() => {
@@ -58,6 +56,7 @@ const CreaEvento = () => {
 
     const formik = useFormik({
         initialValues: {
+            nome: "",
             descrizioneEvento: "",
             dataEvento: new Date(),
             idLocale: "",
@@ -69,52 +68,52 @@ const CreaEvento = () => {
         ) => {
             const locale = locali.find(locale => locale.id === values.idLocale)
 
-            if (!file) return
+            //if (!file) return
             if (!user) return
             if (!locale) return
             if (!dataInizio) return
 
 
-            const upload = uploadFile({ cartella: "immagini/eventi/locandine/", file })
+            // const upload = uploadFile({ cartella: "immagini/eventi/locandine/", file })
 
 
-            upload.on("state_changed", (snapshot: UploadTaskSnapshot) => {
+            // upload.on("state_changed", (snapshot: UploadTaskSnapshot) => {
 
-                const { totalBytes, bytesTransferred } = snapshot
+            //     const { totalBytes, bytesTransferred } = snapshot
 
 
-                const percentuale = (bytesTransferred / totalBytes) * 100
-                console.log(percentuale)
-            }, (e: StorageError) => {
+            //     const percentuale = (bytesTransferred / totalBytes) * 100
+            //     console.log(percentuale)
+            // }, (e: StorageError) => {
 
+            //     setErroreCreazione(e)
+            //     setTimeout(() => { setErroreCreazione(undefined) }, 5000)
+
+            // }, async () => {
+            //     const downloadUrl = await getDownloadURL(upload.snapshot.ref)
+
+            const evento = new Evento(
+                {
+                    nome: values.nome,
+                    descrizione: values.descrizioneEvento,
+                    data: dataInizio,
+                    creatore: user,
+                    locale: locale,
+                    linkLocandina: values.linkLocandina,
+                    foto: ""
+                })
+
+            evento.save().then(() => {
+                setEventoCreato(evento)
+
+                setTimeout(() => { setEventoCreato(undefined) }, 5000)
+
+                formik.resetForm()
+            }).catch((e) => {
                 setErroreCreazione(e)
                 setTimeout(() => { setErroreCreazione(undefined) }, 5000)
-
-            }, async () => {
-                const downloadUrl = await getDownloadURL(upload.snapshot.ref)
-
-                const evento = new Evento(
-                    {
-                        descrizione: values.descrizioneEvento,
-                        data: dataInizio,
-                        creatore: user,
-                        locale: locale,
-                        linkLocandina: values.linkLocandina,
-                        foto: downloadUrl
-                    })
-
-                evento.save().then(() => {
-                    setEventoCreato(evento)
-
-                    setTimeout(() => { setEventoCreato(undefined) }, 5000)
-                    setFile(undefined)
-
-                    formik.resetForm()
-                }).catch((e) => {
-                    setErroreCreazione(e)
-                    setTimeout(() => { setErroreCreazione(undefined) }, 5000)
-                })
             })
+            //})
 
 
 
@@ -136,6 +135,18 @@ const CreaEvento = () => {
 
         <UpperAppBar text="Crea Evento" />
         <form onSubmit={formik.handleSubmit} style={{ gap: "2rem", display: "flex", flexDirection: "column", marginTop: "1rem", marginBottom: "10rem" }}>
+
+            <TextField
+                fullWidth
+                id="nome"
+                name="nome"
+                label="Nome"
+                value={formik.values.nome}
+                onChange={formik.handleChange}
+                error={formik.touched.nome && Boolean(formik.errors.nome)}
+                helperText={formik.touched.nome && formik.errors.nome}
+            />
+
             <TextField
                 fullWidth
                 id="descrizioneEvento"
@@ -190,7 +201,7 @@ const CreaEvento = () => {
             />
 
 
-            <FileUploader setFile={setFile} />
+            {/* <FileUploader setFile={setFile} /> */}
 
             <Button color="primary" variant="contained" fullWidth type="submit">
                 Crea Evento

@@ -43,7 +43,7 @@ export const DettagliEvento = () => {
 
 
     return <>
-        <UpperAppBar text={evento.descrizione} withBackButton={true} rightChildren={<div>
+        <UpperAppBar text={evento.nome} withBackButton={true} rightChildren={<div>
             {formattaData(evento.data)}
         </div>} />
         <div style={{ display: "flex", justifyContent: "center", flexDirection: "column" }}>
@@ -60,9 +60,9 @@ export const DettagliEvento = () => {
                 </div> */}
 
 
+                <Typography variant="h4" align="center">{evento.descrizione}</Typography>
 
                 <div style={{ display: "flex", justifyContent: "center" }}>
-
                     <InstagramEmbed link={evento.linkLocandina} />
                 </div>
 

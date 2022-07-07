@@ -12,6 +12,7 @@ const eventoConverter = {
 
 
         const ogg = {
+            nome: evento.nome,
             descrizione: evento.descrizione, data: evento.data,
             creatore: creatore,
             linkLocandina: evento.linkLocandina,
@@ -27,6 +28,7 @@ const eventoConverter = {
 
 
         return new Evento({
+            nome: data.nome,
             foto: data.foto,
             descrizione: data.descrizione,
             data: data.data.toDate(),
@@ -52,11 +54,12 @@ interface ConstructorParams {
     locale: Locale
     foto: string
     id?: string
+    nome: string
 }
 
 export default class Evento {
 
-
+    nome: string
     descrizione: string;
     data: Date;
     creatore: User
@@ -66,10 +69,10 @@ export default class Evento {
     id: string | undefined
 
 
-    constructor({ descrizione, data, creatore, locale, linkLocandina, foto, id }: ConstructorParams) {
+    constructor({ nome, descrizione, data, creatore, locale, linkLocandina, foto, id }: ConstructorParams) {
 
 
-
+        this.nome = nome
         this.descrizione = descrizione
 
         this.data = data

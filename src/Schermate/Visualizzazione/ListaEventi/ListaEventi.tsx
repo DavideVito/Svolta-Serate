@@ -36,9 +36,16 @@ function ListaEventi() {
   return <>
     <Grid container spacing={1}>
       {eventi.map((evento: Evento) => <Grid key={evento.id} item xs={12} md={12}><EventCard evento={evento} /></Grid>)}
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }} >
-        <Button color="secondary" variant="contained" onClick={() => setProgresso(p => p + INCREMENTO)}>Carica Altro</Button>
-      </div>
+
+
+      <Grid item sx={{ width: "100%", marginInline: "5rem", marginTop: "2rem" }}>
+        <Button
+          color="secondary"
+          variant="contained"
+          fullWidth
+          onClick={() => setProgresso(p => p + INCREMENTO)}>
+          Carica Altro
+        </Button></Grid>
     </Grid>
   </>
 

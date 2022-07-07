@@ -1,6 +1,6 @@
 import { Button, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
-import Map, { FullscreenControl, NavigationControl } from 'react-map-gl';
+import Map, { FullscreenControl, MapRef, NavigationControl } from 'react-map-gl';
 import { Posizione } from '../../../Utils/Classes/Locale/Posizione';
 const STILE_LIGHT = "mapbox://styles/mapbox/streets-v9"
 const STILE_DARK = "mapbox://styles/mapbox/dark-v9"
@@ -15,13 +15,24 @@ interface CustomMapProps {
         height: string
     }
 
-    zoom?: number
+    zoom?: number,
+
 
 
 
 }
 
-const CustomMap = ({ zoom = 3.5, children, posizione = new Posizione(40, -100), widthHeight = { width: "100vw", height: "100vh" } }: CustomMapProps) => {
+const CustomMap = React.forwardRef<MapRef, CustomMapProps>((
+
+
+    {
+        zoom = 10,
+        children,
+        posizione = new Posizione(41.902782, 12.496366),
+        widthHeight = { width: "100vw", height: "100vh" }
+    }: CustomMapProps
+
+    , ref) => {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
 
     const [stileMappa, setStileMappa] = useState(prefersDarkMode ? STILE_DARK : STILE_LIGHT)
@@ -37,7 +48,7 @@ const CustomMap = ({ zoom = 3.5, children, posizione = new Posizione(40, -100), 
     return <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet" />
         <div style={{ justifyContent: "center", display: "flex" }}>
-            <Map
+            <Map ref={ref}
                 style={{ ...widthHeight }}
                 initialViewState={{
                     latitude: posizione.latitudine,
@@ -52,6 +63,7 @@ const CustomMap = ({ zoom = 3.5, children, posizione = new Posizione(40, -100), 
             >
                 <FullscreenControl position="top-left" />
                 <NavigationControl position="top-left" />
+
                 {children ? children : <></>}
 
             </Map>
@@ -60,6 +72,6 @@ const CustomMap = ({ zoom = 3.5, children, posizione = new Posizione(40, -100), 
         </div>
         <Button type="button" onClick={handleChange}>{stileMappa === STILE_SATELLITE ? "Reimposta" : "Satellite"}</Button>
     </div>
-}
+})
 
 export default CustomMap

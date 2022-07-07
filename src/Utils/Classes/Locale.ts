@@ -11,6 +11,7 @@ const localeConverter = {
 
 
 
+
         const hash = geohashForLocation([latitudine, longitudine]);
 
 
@@ -175,7 +176,7 @@ export default class Locale {
 
     }
 
-    static async getLocaliVicinoPosizione(posizione: Posizione, distanzaInMetri: number): Promise<Locale[]> {
+    static async getLocaliDistantiMedoDi(posizione: Posizione, distanzaInMetri: number): Promise<Locale[]> {
         const margini = geohashQueryBounds([posizione.latitudine, posizione.longitudine], distanzaInMetri)
 
         const promises = margini.map(([inizio, fine]) => {
@@ -220,6 +221,7 @@ export default class Locale {
         return locali
 
     }
+
 
 }
 

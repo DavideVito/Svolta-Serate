@@ -13,7 +13,7 @@ function Main() {
   useEffect(() => {
 
 
-    Locale.getLocaliVicinoPosizione(new Posizione(10, 10), 10000000)
+    Locale.getLocaliDistantiMedoDi(new Posizione(10, 10), 10000000)
 
   }, [])
 
