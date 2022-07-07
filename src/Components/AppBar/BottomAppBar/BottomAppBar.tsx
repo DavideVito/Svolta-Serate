@@ -7,7 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import MapIcon from '@mui/icons-material/Map';
 import ListIcon from '@mui/icons-material/List';
 import { AccountCircle } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../Utils/Firebase/init";
 import CustomAddMenu from "../../CustomAddMenu";
@@ -38,17 +38,19 @@ const BottomAppBar = () => {
     return <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0 }}>
         <Toolbar sx={{ justifyContent: "space-between", display: "flex", gap: "1rem" }}>
 
-            <Link to="/" style={{ color: "white" }}>
+            <NavLink to="/" style={{ color: "white" }}>
                 <IconButton color="inherit" >
                     <MapIcon />
                 </IconButton>
-            </Link>
+            </NavLink>
 
-            <Link to="lista" style={{ color: "white" }}>
+            <NavLink to="lista" style={{ color: "white" }} className={isActive =>
+                "nav-link" + (isActive ? " attivo" : "")
+            }>
                 <IconButton color="inherit">
                     <ListIcon />
                 </IconButton>
-            </Link>
+            </NavLink>
 
             <StyledFab color="primary" aria-label="add" onClick={handleClick}>
                 <AddIcon />
@@ -60,11 +62,15 @@ const BottomAppBar = () => {
                 {loading && <CircularProgress />}
 
 
-                <Link to="/login" style={{ color: "white" }}>
+                <NavLink
+                    className={isActive =>
+                        "nav-link" + (!isActive ? " unselected" : "")
+                    }
+                    to="/login" style={{ color: "white" }}>
                     <IconButton color="inherit" >
                         {user ? <Avatar src={user.photoURL ?? ""} /> : <AccountCircle />}
                     </IconButton>
-                </Link>
+                </NavLink>
 
 
             </div>

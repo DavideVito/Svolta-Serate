@@ -1,0 +1,1 @@
+export const MISSING_IMAGE_URL = ""

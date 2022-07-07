@@ -1,15 +1,19 @@
 import { Alert, AlertTitle, Button, TextField } from "@mui/material";
 import { User } from "firebase/auth";
+import { getDownloadURL, StorageError, UploadTaskSnapshot } from "firebase/storage";
 import { useFormik } from 'formik';
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate } from "react-router-dom";
 import * as Yup from "yup"
+import UpperAppBar from "../../../Components/AppBar/UpperAppBar";
 import DateInput from "../../../Components/DateInput";
+import FileUploader from "../../../Components/FileUploader";
 import Loading from "../../../Components/Loading";
 import Evento from "../../../Utils/Classes/Evento";
 import Locale, { Posizione } from "../../../Utils/Classes/Locale";
 import { auth } from "../../../Utils/Firebase/init";
+import { uploadFile } from "../../../Utils/Functions/UploadFile";
 
 
 interface Values {
@@ -35,6 +39,7 @@ const CreaEvento = () => {
     const [eventoCreato, setEventoCreato] = useState<Evento | undefined>(undefined)
     const [erroreCreazione, setErroreCreazione] = useState<any | undefined>(undefined)
     const [dataInizio, setDataInizio] = useState<Date | undefined>(undefined)
+    const [file, setFile] = useState<File | undefined>(undefined)
 
 
     useEffect(() => {
@@ -62,26 +67,60 @@ const CreaEvento = () => {
         onSubmit: (
             values: Values
         ) => {
-            debugger
-
-            if (!user) return
             const locale = locali.find(locale => locale.id === values.idLocale)
 
+            if (!file) return
+            if (!user) return
             if (!locale) return
-
             if (!dataInizio) return
 
 
-            const evento = new Evento({ descrizione: values.descrizioneEvento, data: dataInizio, creatore: user, locale: locale, linkLocandina: values.linkLocandina })
+            const upload = uploadFile({ cartella: "immagini/eventi/locandine/", file })
 
-            evento.save().then(() => {
-                setEventoCreato(evento)
-                setTimeout(() => { setEventoCreato(undefined) }, 5000)
-                formik.resetForm()
-            }).catch((e) => {
+
+            upload.on("state_changed", (snapshot: UploadTaskSnapshot) => {
+
+                const { totalBytes, bytesTransferred } = snapshot
+
+
+                const percentuale = (bytesTransferred / totalBytes) * 100
+                console.log(percentuale)
+            }, (e: StorageError) => {
+
                 setErroreCreazione(e)
                 setTimeout(() => { setErroreCreazione(undefined) }, 5000)
+
+            }, async () => {
+                const downloadUrl = await getDownloadURL(upload.snapshot.ref)
+
+                const evento = new Evento(
+                    {
+                        descrizione: values.descrizioneEvento,
+                        data: dataInizio,
+                        creatore: user,
+                        locale: locale,
+                        linkLocandina: values.linkLocandina,
+                        foto: downloadUrl
+                    })
+
+                evento.save().then(() => {
+                    setEventoCreato(evento)
+
+                    setTimeout(() => { setEventoCreato(undefined) }, 5000)
+                    setFile(undefined)
+
+                    formik.resetForm()
+                }).catch((e) => {
+                    setErroreCreazione(e)
+                    setTimeout(() => { setErroreCreazione(undefined) }, 5000)
+                })
             })
+
+
+
+
+
+
         }
     });
 
@@ -93,86 +132,91 @@ const CreaEvento = () => {
         return <Navigate to={"/login"} />
     }
 
-    return <form onSubmit={formik.handleSubmit} style={{ gap: "2rem", display: "flex", flexDirection: "column", marginTop: "1rem" }}>
-        <TextField
-            fullWidth
-            id="descrizioneEvento"
-            name="descrizioneEvento"
-            label="Descrizione Evento"
-            value={formik.values.descrizioneEvento}
-            onChange={formik.handleChange}
-            error={formik.touched.descrizioneEvento && Boolean(formik.errors.descrizioneEvento)}
-            helperText={formik.touched.descrizioneEvento && formik.errors.descrizioneEvento}
-        />
+    return <>
 
-        <div style={{ display: "grid", gap: "1.5rem", gridTemplateColumns: "minmax(5rem, 1fr)" }}>
-            <DateInput
-                label="Inzio"
-                date={dataInizio}
-                setDate={setDataInizio}
-                renderInput={(params) => <TextField {...params} />}
-
+        <UpperAppBar text="Crea Evento" />
+        <form onSubmit={formik.handleSubmit} style={{ gap: "2rem", display: "flex", flexDirection: "column", marginTop: "1rem", marginBottom: "10rem" }}>
+            <TextField
+                fullWidth
+                id="descrizioneEvento"
+                name="descrizioneEvento"
+                label="Descrizione Evento"
+                value={formik.values.descrizioneEvento}
+                onChange={formik.handleChange}
+                error={formik.touched.descrizioneEvento && Boolean(formik.errors.descrizioneEvento)}
+                helperText={formik.touched.descrizioneEvento && formik.errors.descrizioneEvento}
             />
-        </div>
+
+            <div style={{ display: "grid", gap: "1.5rem", gridTemplateColumns: "minmax(5rem, 1fr)" }}>
+                <DateInput
+                    label="Inzio"
+                    date={dataInizio}
+                    setDate={setDataInizio}
+                    renderInput={(params) => <TextField {...params} />}
+
+                />
+            </div>
 
 
 
-        <select
-            id="idLocale"
-            name="idLocale"
+            <select
+                id="idLocale"
+                name="idLocale"
 
-            value={formik.values.idLocale}
-            onChange={formik.handleChange}
+                value={formik.values.idLocale}
+                onChange={formik.handleChange}
 
-        >
+            >
 
-            {
-                locali.map((locale: Locale) => <option key={locale.nome} value={locale.id}>
+                {
+                    locali.map((locale: Locale) => <option key={locale.nome} value={locale.id}>
 
-                    {locale.nome}
+                        {locale.nome}
 
-                </option>)
+                    </option>)
+                }
+
+            </select>
+
+            <TextField
+                fullWidth
+                id="linkLocandina"
+                name="linkLocandina"
+                label="Link Locandina Instagram"
+                value={formik.values.linkLocandina}
+                onChange={formik.handleChange}
+                error={formik.touched.linkLocandina && Boolean(formik.errors.linkLocandina)}
+                helperText={formik.touched.linkLocandina && formik.errors.linkLocandina}
+            />
+
+
+            <FileUploader setFile={setFile} />
+
+            <Button color="primary" variant="contained" fullWidth type="submit">
+                Crea Evento
+            </Button>
+
+
+            {eventoCreato &&
+                <Alert severity="success">
+                    <AlertTitle>Successo!</AlertTitle>
+                    <div>Evento <i>{eventoCreato.descrizione}</i> creato con successo</div>
+                </Alert>
             }
 
-        </select>
+            {erroreCreazione && <Alert severity="error">
+                <AlertTitle>Errore!</AlertTitle>
+                <div>
+                    Errore Creazione! <br />
 
-        <TextField
-            fullWidth
-            id="linkLocandina"
-            name="linkLocandina"
-            label="Link Locandina Instagram"
-            value={formik.values.linkLocandina}
-            onChange={formik.handleChange}
-            error={formik.touched.linkLocandina && Boolean(formik.errors.linkLocandina)}
-            helperText={formik.touched.linkLocandina && formik.errors.linkLocandina}
-        />
-
-
-        <Button color="primary" variant="contained" fullWidth type="submit">
-            Crea Evento
-        </Button>
-
-
-        {eventoCreato &&
-            <Alert severity="success">
-                <AlertTitle>Successo!</AlertTitle>
-                <div>Evento <i>{eventoCreato.descrizione}</i> creato con successo</div>
-            </Alert>
-        }
-
-        {erroreCreazione && <Alert severity="error">
-            <AlertTitle>Errore!</AlertTitle>
-            <div>
-                Errore Creazione! <br />
-
-                {erroreCreazione.message}
+                    {erroreCreazione.cause || erroreCreazione.message}
 
 
 
-            </div>
-        </Alert>}
-    </form>
-
+                </div>
+            </Alert>}
+        </form>
+    </>
 
 
 

@@ -15,6 +15,7 @@ const eventoConverter = {
             descrizione: evento.descrizione, data: evento.data,
             creatore: creatore,
             linkLocandina: evento.linkLocandina,
+            foto: evento.foto,
             locale: evento.locale.toJSON()
         }
 
@@ -25,7 +26,15 @@ const eventoConverter = {
 
 
 
-        return new Evento({ descrizione: data.descrizione, data: data.data.toDate(), creatore: data.creatore, locale: data.locale, linkLocandina: data.linkLocandina, id: snapshot.id });
+        return new Evento({
+            foto: data.foto,
+            descrizione: data.descrizione,
+            data: data.data.toDate(),
+            creatore: data.creatore,
+            locale: data.locale,
+            linkLocandina: data.linkLocandina,
+            id: snapshot.id
+        });
     }
     ,
 
@@ -41,6 +50,7 @@ interface ConstructorParams {
     creatore: User
     linkLocandina: string,
     locale: Locale
+    foto: string
     id?: string
 }
 
@@ -52,10 +62,11 @@ export default class Evento {
     creatore: User
     locale: Locale
     linkLocandina: string
+    foto: string
     id: string | undefined
 
 
-    constructor({ descrizione, data, creatore, locale, linkLocandina, id }: ConstructorParams) {
+    constructor({ descrizione, data, creatore, locale, linkLocandina, foto, id }: ConstructorParams) {
 
 
 
@@ -66,6 +77,7 @@ export default class Evento {
         this.creatore = creatore;
         this.locale = locale
         this.linkLocandina = linkLocandina
+        this.foto = foto
         this.id = id
     }
 
