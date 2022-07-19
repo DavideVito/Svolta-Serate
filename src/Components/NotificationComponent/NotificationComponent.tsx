@@ -8,7 +8,7 @@ import requestNotificationPermission from "../../Utils/Functions/RequestNotifica
 const NotificationComponent = () => {
 
     const [notifica, setNotifica] = useState<NotificationPayload | undefined>()
-    const [esitoNotifica, setEsitoNotifica] = useState<"default" | "denied" | "granted">(Notification.permission)
+    const [esitoNotifica, setEsitoNotifica] = useState<"default" | "denied" | "granted">(Notification?.permission ?? "denied")
 
 
     useEffect(() => {
