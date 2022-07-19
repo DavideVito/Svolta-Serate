@@ -12,7 +12,7 @@ import UpperAppBar from "./Components/AppBar/UpperAppBar";
 import SuspenseWrapper from "./Components/SuspenseWrapper/SuspenseWrapper";
 
 
-
+import NotificationComponent from "./Components/NotificationComponent";
 
 
 
@@ -105,6 +105,10 @@ const darkTheme = createTheme({
 
 const AppWrapper = () => {
 
+
+
+
+
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const theme = useMemo(() => {
     const tema = prefersDarkMode ? darkTheme : lightTheme;
@@ -116,6 +120,7 @@ const AppWrapper = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <App />
+        <NotificationComponent />
         <CustomAppBar />
       </ThemeProvider>
     </Router>

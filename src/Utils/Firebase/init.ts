@@ -9,6 +9,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { initializeFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage"
+import { getMessaging } from "firebase/messaging"
 
 
 const firebaseConfig = {
@@ -30,4 +31,7 @@ export default app
 export const auth = getAuth(app)
 export const firestore = initializeFirestore(app, { ignoreUndefinedProperties: true })
 export const storage = getStorage(app)
+export const messaging = getMessaging(app)
+
+
 
