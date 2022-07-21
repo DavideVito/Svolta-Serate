@@ -38,7 +38,7 @@ const NotificationComponent = () => {
 
 
                 const token = await getToken(messaging, { vapidKey: "BGvyJ9sTlCSJCX5gZ-0MDWZz7ZtWJvmxZUpkujHKyN-1i1V2koQ2V5tbqvQ9avfwwPbWEyR82TmINw6ljId1ogY" });
-
+                console.log(token)
                 if (!token) return
 
 
