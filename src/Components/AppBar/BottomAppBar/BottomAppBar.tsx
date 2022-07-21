@@ -1,4 +1,4 @@
-import { AppBar, Fab, CircularProgress, Avatar } from "@mui/material"
+import { AppBar, Fab, CircularProgress, Avatar, Box } from "@mui/material"
 
 import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,6 +12,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../Utils/Firebase/init";
 import CustomAddMenu from "../../CustomAddMenu";
 import { useState } from "react";
+import NotificationComponent from "../../NotificationComponent";
 
 const StyledFab = styled(Fab)({
     position: 'absolute',
@@ -36,7 +37,9 @@ const BottomAppBar = () => {
 
 
     return <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0 }}>
-        <Toolbar sx={{ justifyContent: "space-between", display: "flex", gap: "1rem" }}>
+
+
+        <Toolbar sx={{ gap: "1rem" }}>
 
             <NavLink to="/" style={{ color: "white" }}>
                 <IconButton color="inherit" >
@@ -52,28 +55,43 @@ const BottomAppBar = () => {
                 </IconButton>
             </NavLink>
 
+
+
             <StyledFab color="primary" aria-label="add" onClick={handleClick}>
                 <AddIcon />
             </StyledFab>
 
             <CustomAddMenu open={Boolean(anchorEl)} handleClose={handleClose} elemento={anchorEl} />
 
-            <div style={{ marginLeft: "auto" }}>
-                {loading && <CircularProgress />}
+
+            <Box sx={{ flexGrow: 1 }} />
+
+            <NotificationComponent />
 
 
-                <NavLink
-                    className={isActive =>
-                        "nav-link" + (!isActive ? " unselected" : "")
-                    }
-                    to="/login" style={{ color: "white" }}>
-                    <IconButton color="inherit" >
-                        {user ? <Avatar src={user.photoURL ?? ""} /> : <AccountCircle />}
-                    </IconButton>
-                </NavLink>
 
 
-            </div>
+
+
+            {loading && <CircularProgress />}
+
+
+            <NavLink
+
+                className={isActive =>
+                    "nav-link" + (!isActive ? " unselected" : "")
+                }
+                to="/login" style={{ color: "white" }}>
+                <IconButton color="inherit" >
+                    {user ? <Avatar src={user.photoURL ?? ""} /> : <AccountCircle />}
+                </IconButton>
+            </NavLink>
+
+
+
+
+
+
 
             {/* <StyledFab color="secondary" aria-label="add">
                 <AddIcon />

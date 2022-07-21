@@ -1,14 +1,26 @@
-import { Alert, AlertTitle, Button, Snackbar } from "@mui/material"
-import { getToken, NotificationPayload, onMessage } from "firebase/messaging"
+import { Alert, AlertTitle, IconButton, Snackbar } from "@mui/material"
+import { getToken, isSupported, NotificationPayload, onMessage, } from "firebase/messaging"
 import { useEffect, useState } from "react"
 import { messaging } from "../../Utils/Firebase/init"
 import requestNotificationPermission from "../../Utils/Functions/RequestNotificationPermission"
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 
+const getNotificationStatus = () => {
+    try {
+        return Notification.permission
+    } catch (error) {
+        return "denied"
+    }
+
+}
 const NotificationComponent = () => {
 
+
+
     const [notifica, setNotifica] = useState<NotificationPayload | undefined>()
-    const [esitoNotifica, setEsitoNotifica] = useState<"default" | "denied" | "granted">(Notification?.permission ?? "denied")
+    const [esitoNotifica, setEsitoNotifica] = useState<"default" | "denied" | "granted">(getNotificationStatus())
+
 
 
     useEffect(() => {
@@ -20,19 +32,21 @@ const NotificationComponent = () => {
         const main = async () => {
 
 
-
-            const token = await getToken(messaging, { vapidKey: "BGvyJ9sTlCSJCX5gZ-0MDWZz7ZtWJvmxZUpkujHKyN-1i1V2koQ2V5tbqvQ9avfwwPbWEyR82TmINw6ljId1ogY" });
-
-            console.log(token)
+            const supported = await isSupported()
+            if (supported) {
 
 
-            if (!token) return
+
+                const token = await getToken(messaging, { vapidKey: "BGvyJ9sTlCSJCX5gZ-0MDWZz7ZtWJvmxZUpkujHKyN-1i1V2koQ2V5tbqvQ9avfwwPbWEyR82TmINw6ljId1ogY" });
+
+                if (!token) return
 
 
-            onMessage(messaging, (payload) => {
-                setNotifica(payload.notification)
-            })
+                onMessage(messaging, (payload) => {
+                    setNotifica(payload.notification)
+                })
 
+            }
 
 
         }
@@ -53,7 +67,11 @@ const NotificationComponent = () => {
     }
 
     if (esitoNotifica === "default") {
-        return <Button onClick={richiediPermessiNotifica}>Permessi notifica</Button>
+
+        return <IconButton onClick={richiediPermessiNotifica}>
+            <NotificationsIcon />
+        </IconButton>
+
     }
 
     if (!notifica) return <></>

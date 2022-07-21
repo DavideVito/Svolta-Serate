@@ -1,3 +1,4 @@
+import { IconButton } from '@mui/material';
 import { distanceBetween } from 'geofire-common';
 import { useCallback, useRef, useState } from 'react';
 import { GeolocateControl, GeolocateResultEvent, MapRef, Marker } from 'react-map-gl';
@@ -9,7 +10,7 @@ import Locale, { Posizione } from '../../../Utils/Classes/Locale';
 import Pin from './Pin';
 
 
-
+import NearMeIcon from '@mui/icons-material/NearMe';
 
 export const Mappa = () => {
 
@@ -78,7 +79,11 @@ export const Mappa = () => {
                 trackUserLocation={false}
                 onGeolocate={callbackPosizione} />
 
-            <CustomControl text='Cerca eventi vicini' onClick={() => { cercaLocali(posizione) }} />
+            <CustomControl>
+                <IconButton onClick={() => { cercaLocali(posizione) }}>
+                    <NearMeIcon />
+                </IconButton>
+            </CustomControl>
 
 
             {
