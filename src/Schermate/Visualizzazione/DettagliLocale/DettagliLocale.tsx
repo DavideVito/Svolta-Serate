@@ -1,10 +1,12 @@
-import { Alert, Typography } from "@mui/material"
+import { Alert, IconButton, Typography, Link } from "@mui/material"
 import { Marker } from "react-map-gl"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import CustomMap from "../../../Components/Maps/CustomMap"
 import Locale from "../../../Utils/Classes/Locale"
 import Pin from "../Mappa/Pin"
+import CustomControl from "../../../Components/Maps/CustomMap/CustomControl"
+import NavigationIcon from '@mui/icons-material/Navigation';
 
 interface DettagliLocaleProps {
     propLocale?: Locale
@@ -71,6 +73,15 @@ export const DettagliLocale = ({ propLocale }: DettagliLocaleProps) => {
                         >
                             <Pin />
                         </Marker>
+
+                        <CustomControl>
+                            <Link target="_blank" rel="noreferrer"
+                                href={`http://maps.google.com/maps?daddr=${locale.posizione.latitudine},${locale.posizione.longitudine}`}>
+                                <IconButton>
+                                    <NavigationIcon />
+                                </IconButton>
+                            </Link>
+                        </CustomControl>
                     </CustomMap>
                 </div>
 

@@ -75,10 +75,10 @@ export const DettagliEvento = () => {
                         Dettagli
                     </Typography>
 
-                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: "1rem", marginInline: "10rem" }}>
+                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: "1rem", display: "flex", justifyContent: "center" }}>
                         {
                             evento.dettagli.map((dettaglio) => {
-                                return <Grid item xs={6}>
+                                return <Grid item xs={6} style={{ maxWidth: "10rem" }}>
                                     <DettaglioEventoView dettaglio={dettaglio} />
                                 </Grid>
                             })
@@ -86,6 +86,9 @@ export const DettagliEvento = () => {
                     </Grid>
                 </div>
 
+                <div>
+                    <Typography title="Partecipanti" align="center" variant="h4">👨‍👧‍👧: 100</Typography>
+                </div>
 
 
 

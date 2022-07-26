@@ -5,6 +5,12 @@ interface DettaglioEventoViewInterface {
 }
 export const DettaglioEventoView = ({ dettaglio }: DettaglioEventoViewInterface) => {
 
-    return <><div>{dettaglio.chiave}: {dettaglio.valore.toString()}</div> </>
+
+
+    return <div title={dettaglio.chiave} style={{ display: "flex", flexDirection: "row", gap: "1rem", alignItems: "center", maxWidth: "10rem" }}>
+        {<dettaglio.iconCompoent />}
+        <p>{dettaglio.getValueIcon()}</p>
+    </div>
+
 
 }

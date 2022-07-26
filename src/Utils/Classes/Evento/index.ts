@@ -152,14 +152,14 @@ export default class Evento {
 
     }
 
-    static getEventi = async (max: number, conLimiteMassimo = true): Promise<Evento[]> => {
-
+    static getEventi = async (max: number, conLimiteMassimo = true, massimoGiorni = 2): Promise<Evento[]> => {
+        console.log({ massimoGiorni })
 
         const ref = collection(firestore, KEY_COLLECTION).withConverter(eventoConverter)
 
 
         const limiteMinimo = moment().subtract(4, "hours").toDate()
-        const limiteMassimo = moment().add(2, "days").toDate()
+        const limiteMassimo = moment().add(massimoGiorni, "days").toDate()
 
 
         const whereLimiteMassimo = where("data", "<=", limiteMassimo)

@@ -6,31 +6,17 @@ import Evento from "../../../Utils/Classes/Evento";
 import EventCard from "../../../Components/Card/EventoCard";
 import { Button, Grid } from "@mui/material";
 
-const INCREMENTO = 10
+const INCREMENTO = 1
 
 function ListaEventi() {
 
-  const [progresso, setProgresso] = useState(INCREMENTO)
+  const [progresso, setProgresso] = useState(2)
   const [eventi, setEventi] = useState<Evento[]>([])
 
 
   useEffect(() => {
-    Evento.getEventi(progresso, !(progresso > INCREMENTO)).then(setEventi)
+    Evento.getEventi(progresso, !(progresso > INCREMENTO), progresso).then(setEventi)
   }, [progresso])
-
-
-  // return <CalendarView
-  //   items={[{
-  //     _id: Math.random().toExponential(),
-  //     classes: "",
-  //     endDateTime: moment().add(4, "hours").toDate(),
-  //     name: "Evento",
-  //     startDateTime: moment().toDate()
-
-
-  //   }]}
-  //   dataMinima={moment().toDate()}
-  //   dataMassima={moment().add(4, "hours").toDate()} />
 
 
   return <>
