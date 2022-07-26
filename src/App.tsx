@@ -114,6 +114,7 @@ const AppWrapper = () => {
 
     return tema;
   }, [prefersDarkMode]);
+
   return (
     <Router>
       <ThemeProvider theme={theme}>
@@ -123,6 +124,7 @@ const AppWrapper = () => {
       </ThemeProvider>
     </Router>
   );
+
 };
 
 export default AppWrapper;

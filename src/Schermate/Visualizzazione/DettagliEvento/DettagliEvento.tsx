@@ -1,4 +1,4 @@
-import { Alert, Typography } from "@mui/material"
+import { Alert, Grid, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import UpperAppBar from "../../../Components/AppBar/UpperAppBar"
@@ -6,6 +6,7 @@ import InstagramEmbed from "../../../Components/InstagramEmbed"
 import Evento from "../../../Utils/Classes/Evento"
 import { formattaData } from "../../../Utils/Functions/Formattatori"
 import DettagliLocale from "../DettagliLocale"
+import { DettaglioEventoView } from "./DettaglioEventoView"
 
 
 export const DettagliEvento = () => {
@@ -62,9 +63,32 @@ export const DettagliEvento = () => {
 
                 <Typography variant="h4" align="center">{evento.descrizione}</Typography>
 
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                    <InstagramEmbed link={evento.linkLocandina} />
+                {
+                    evento.linkLocandina && <div style={{ display: "flex", justifyContent: "center" }}>
+                        <InstagramEmbed link={evento.linkLocandina} />
+                    </div>
+                }
+
+
+                <div>
+                    <Typography variant="h4" align="center">
+                        Dettagli
+                    </Typography>
+
+                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: "1rem", marginInline: "10rem" }}>
+                        {
+                            evento.dettagli.map((dettaglio) => {
+                                return <Grid item xs={6}>
+                                    <DettaglioEventoView dettaglio={dettaglio} />
+                                </Grid>
+                            })
+                        }
+                    </Grid>
                 </div>
+
+
+
+
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                     <Typography variant="h3" color="primary" fontWeight={"bolder"} align="center">Locale</Typography>

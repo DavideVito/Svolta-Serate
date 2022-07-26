@@ -1,15 +1,16 @@
 import { User } from "firebase/auth";
 import { addDoc, collection, getDocs, orderBy, query, where, limitToLast, getDoc, doc } from "firebase/firestore";
 import moment from "moment";
-import { firestore } from "../Firebase/init";
-import Locale from "./Locale";
+import { firestore } from "../../Firebase/init";
+import Locale from "../Locale";
+import DettaglioEvento from "./DettaglioEvento";
 
 const eventoConverter = {
     toFirestore: (evento: Evento) => {
 
         const creatore = evento.creatore.toJSON()
 
-
+        const dettagli = evento.dettagli.map(d => d.toJSON())
 
         const ogg = {
             nome: evento.nome,
@@ -17,15 +18,17 @@ const eventoConverter = {
             creatore: creatore,
             linkLocandina: evento.linkLocandina,
             foto: evento.foto,
-            locale: evento.locale.toJSON()
+            locale: evento.locale.toJSON(),
+            dettagli
         }
 
         return ogg;
     },
+
     fromFirestore: (snapshot: any, options: any) => {
         const data = snapshot.data(options);
 
-
+        const dettagli = DettaglioEvento.deserialize(snapshot, options)
 
         return new Evento({
             nome: data.nome,
@@ -35,7 +38,9 @@ const eventoConverter = {
             creatore: data.creatore,
             locale: data.locale,
             linkLocandina: data.linkLocandina,
-            id: snapshot.id
+
+            id: snapshot.id,
+            dettagli
         });
     }
     ,
@@ -55,6 +60,7 @@ interface ConstructorParams {
     foto: string
     id?: string
     nome: string
+    dettagli?: DettaglioEvento<any>[]
 }
 
 export default class Evento {
@@ -66,10 +72,14 @@ export default class Evento {
     locale: Locale
     linkLocandina: string
     foto: string
+
+    dettagli: DettaglioEvento<any>[]
+
+
     id: string | undefined
 
 
-    constructor({ nome, descrizione, data, creatore, locale, linkLocandina, foto, id }: ConstructorParams) {
+    constructor({ nome, descrizione, data, creatore, locale, linkLocandina, foto, id, dettagli = [] }: ConstructorParams) {
 
 
         this.nome = nome
@@ -82,6 +92,8 @@ export default class Evento {
         this.linkLocandina = linkLocandina
         this.foto = foto
         this.id = id
+
+        this.dettagli = dettagli
     }
 
 
@@ -175,7 +187,6 @@ export default class Evento {
 
         const docRef = doc(firestore, KEY_COLLECTION, id).withConverter(eventoConverter)
         const docSnap = await getDoc(docRef);
-
 
         return docSnap.data()
 

@@ -20,6 +20,7 @@ const UpperAppBar = ({ withBackButton, text, data, rightChildren }: UpperAppBarP
 
     const navigate = useNavigate();
 
+
     return <AppBar position="static" style={{ marginBottom: "1.5rem" }}>
         <Toolbar>
             {

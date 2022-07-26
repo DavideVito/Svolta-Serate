@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Button, TextField } from "@mui/material";
+import { Alert, AlertTitle, Button, MenuItem, Select, TextField } from "@mui/material";
 import { User } from "firebase/auth";
 import { useFormik } from 'formik';
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import UpperAppBar from "../../../Components/AppBar/UpperAppBar";
 import DateInput from "../../../Components/DateInput";
 import Loading from "../../../Components/Loading";
 import Evento from "../../../Utils/Classes/Evento";
+import { DettaglioEta, DettaglioFumatori, DettaglioMusica, GeneriMusicali } from "../../../Utils/Classes/Evento/DettaglioEvento";
 import Locale, { Posizione } from "../../../Utils/Classes/Locale";
 import { auth } from "../../../Utils/Firebase/init";
 
@@ -92,6 +93,7 @@ const CreaEvento = () => {
             // }, async () => {
             //     const downloadUrl = await getDownloadURL(upload.snapshot.ref)
 
+
             const evento = new Evento(
                 {
                     nome: values.nome,
@@ -100,7 +102,14 @@ const CreaEvento = () => {
                     creatore: user,
                     locale: locale,
                     linkLocandina: values.linkLocandina,
-                    foto: ""
+                    foto: "",
+                    dettagli: [
+                        new DettaglioFumatori(true),
+                        new DettaglioMusica(GeneriMusicali["Hip-Hop"]),
+                        new DettaglioMusica(GeneriMusicali.Reggaeton),
+                        new DettaglioEta("18+")
+
+                    ]
                 })
 
             evento.save().then(() => {
@@ -170,24 +179,20 @@ const CreaEvento = () => {
 
 
 
-            <select
+            <Select
                 id="idLocale"
                 name="idLocale"
-
                 value={formik.values.idLocale}
                 onChange={formik.handleChange}
-
             >
 
                 {
-                    locali.map((locale: Locale) => <option key={locale.nome} value={locale.id}>
-
+                    locali.map((locale: Locale) => <MenuItem key={locale.nome} value={locale.id}>
                         {locale.nome}
-
-                    </option>)
+                    </MenuItem>)
                 }
 
-            </select>
+            </Select>
 
             <TextField
                 fullWidth

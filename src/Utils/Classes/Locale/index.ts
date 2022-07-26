@@ -1,5 +1,5 @@
 import { addDoc, collection, orderBy, startAt, endAt, getDocs, query, where, getDoc, doc } from "firebase/firestore";
-import { firestore } from "../Firebase/init";
+import { firestore } from "../../Firebase/init";
 import { geohashForLocation, geohashQueryBounds, distanceBetween } from "geofire-common"
 import { User } from "firebase/auth";
 

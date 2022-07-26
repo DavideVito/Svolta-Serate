@@ -7,6 +7,7 @@ const DATE_FORMAT = Intl.DateTimeFormat(undefined, {
     minute: "2-digit",
 })
 
+
 export const formattaData = (data: Date) => DATE_FORMAT.format(data)
 
 
