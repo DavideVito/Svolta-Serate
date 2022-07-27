@@ -1,9 +1,10 @@
 import { User } from "firebase/auth";
-import { addDoc, collection, getDocs, orderBy, query, where, limitToLast, getDoc, doc } from "firebase/firestore";
+import { addDoc, collection, getDocs, orderBy, query, where, limitToLast, getDoc, doc, updateDoc, increment, serverTimestamp, setDoc, deleteDoc } from "firebase/firestore";
 import moment from "moment";
 import { firestore } from "../../Firebase/init";
 import Locale from "../Locale";
 import DettaglioEvento from "./DettaglioEvento";
+
 
 const eventoConverter = {
     toFirestore: (evento: Evento) => {
@@ -19,13 +20,15 @@ const eventoConverter = {
             linkLocandina: evento.linkLocandina,
             foto: evento.foto,
             locale: evento.locale.toJSON(),
-            dettagli
+            dettagli,
+            partecipanti: 0
         }
 
         return ogg;
     },
 
     fromFirestore: (snapshot: any, options: any) => {
+
         const data = snapshot.data(options);
 
         const dettagli = DettaglioEvento.deserialize(snapshot, options)
@@ -40,7 +43,8 @@ const eventoConverter = {
             linkLocandina: data.linkLocandina,
 
             id: snapshot.id,
-            dettagli
+            dettagli,
+            partecipanti: data.partecipanti
         });
     }
     ,
@@ -60,7 +64,8 @@ interface ConstructorParams {
     foto: string
     id?: string
     nome: string
-    dettagli?: DettaglioEvento<any>[]
+    dettagli?: DettaglioEvento<any>[],
+    partecipanti?: number
 }
 
 export default class Evento {
@@ -72,14 +77,12 @@ export default class Evento {
     locale: Locale
     linkLocandina: string
     foto: string
-
     dettagli: DettaglioEvento<any>[]
-
-
     id: string | undefined
+    partecipanti = 0
 
 
-    constructor({ nome, descrizione, data, creatore, locale, linkLocandina, foto, id, dettagli = [] }: ConstructorParams) {
+    constructor({ nome, descrizione, data, creatore, locale, linkLocandina, foto, id, dettagli = [], partecipanti = 0 }: ConstructorParams) {
 
 
         this.nome = nome
@@ -92,7 +95,7 @@ export default class Evento {
         this.linkLocandina = linkLocandina
         this.foto = foto
         this.id = id
-
+        this.partecipanti = partecipanti
         this.dettagli = dettagli
     }
 
@@ -105,6 +108,57 @@ export default class Evento {
 
         return await addDoc(ref, this)
 
+
+    }
+
+    incrementPartecipanti = (user: User) => {
+        const coll = collection(firestore, KEY_COLLECTION)
+
+        const ref = doc(coll, this.id)
+        const refPartecipante = doc(coll, this.id, "partecipanti", user.uid)
+
+
+
+
+        const updatePromise = updateDoc(ref, { partecipanti: increment(1) })
+
+        const insertPromise = setDoc(refPartecipante, {
+            data: serverTimestamp()
+        })
+
+
+
+        return Promise.all([updatePromise, insertPromise])
+    }
+
+    decrementaPartecipanti = (user: User) => {
+        const coll = collection(firestore, KEY_COLLECTION)
+
+        const ref = doc(coll, this.id)
+        const refPartecipante = doc(coll, this.id, "partecipanti", user.uid)
+
+
+
+
+        const updatePromise = updateDoc(ref, { partecipanti: increment(-1) })
+
+        const insertPromise = deleteDoc(refPartecipante)
+
+
+
+        return Promise.all([updatePromise, insertPromise])
+    }
+
+    async utentePartecipaEvento(user: User): Promise<boolean> {
+
+        const coll = collection(firestore, KEY_COLLECTION)
+
+        const refPartecipante = doc(coll, this.id, "partecipanti", user.uid)
+
+        const elem = await getDoc(refPartecipante)
+
+
+        return elem.exists()
 
     }
 
@@ -153,7 +207,6 @@ export default class Evento {
     }
 
     static getEventi = async (max: number, conLimiteMassimo = true, massimoGiorni = 2): Promise<Evento[]> => {
-        console.log({ massimoGiorni })
 
         const ref = collection(firestore, KEY_COLLECTION).withConverter(eventoConverter)
 

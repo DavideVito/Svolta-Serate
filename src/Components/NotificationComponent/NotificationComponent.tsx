@@ -25,7 +25,6 @@ const NotificationComponent = () => {
 
     useEffect(() => {
 
-        console.log(esitoNotifica)
 
         if (esitoNotifica === "default") return
 

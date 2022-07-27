@@ -88,7 +88,6 @@ export default function ModalIndirizzoLocale({ postoSelezionato, setPostoSelezio
                                 postiTrovati.length > 0 ?
                                     <div>
                                         <select
-
                                             onChange={handleChange}
                                         >{
                                                 [EMPTY_PLACE, ...postiTrovati].map((posto: Place) => <>

@@ -28,7 +28,6 @@ export const DettagliLocale = ({ propLocale }: DettagliLocaleProps) => {
 
     }, [locale])
 
-    useEffect(() => { console.log(locale) }, [locale])
 
     useEffect(() => {
 

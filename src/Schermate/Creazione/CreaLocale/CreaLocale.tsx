@@ -61,7 +61,6 @@ const CreaLocale = () => {
 
     const setPostoSelezionato = (data: any) => {
 
-        console.log(data)
 
 
         sps(data)

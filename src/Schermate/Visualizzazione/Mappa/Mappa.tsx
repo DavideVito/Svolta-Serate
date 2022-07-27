@@ -44,7 +44,6 @@ export const Mappa = () => {
 
         const evt = await Evento.getEventiDeiLocali(locali)
 
-        console.log(evt)
 
         setEventi(evt)
         setPosizione(position)
