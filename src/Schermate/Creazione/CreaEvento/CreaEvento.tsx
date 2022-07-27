@@ -9,9 +9,11 @@ import UpperAppBar from "../../../Components/AppBar/UpperAppBar";
 import DateInput from "../../../Components/DateInput";
 import Loading from "../../../Components/Loading";
 import Evento from "../../../Utils/Classes/Evento";
-import { DettaglioEta, DettaglioFumatori, DettaglioMusica, GeneriMusicali } from "../../../Utils/Classes/Evento/DettaglioEvento";
+import DettaglioEvento from "../../../Utils/Classes/Evento/DettaglioEvento";
 import Locale, { Posizione } from "../../../Utils/Classes/Locale";
 import { auth } from "../../../Utils/Firebase/init";
+import { DettaglioEventoView } from "../../Visualizzazione/DettagliEvento/DettaglioEventoView";
+import ModalDettagli from "./ModalDettagli";
 
 
 interface Values {
@@ -39,6 +41,8 @@ const CreaEvento = () => {
     const [eventoCreato, setEventoCreato] = useState<Evento | undefined>(undefined)
     const [erroreCreazione, setErroreCreazione] = useState<any | undefined>(undefined)
     const [dataInizio, setDataInizio] = useState<Date | undefined>(undefined)
+    const [dettagli, setDettagli] = useState<(DettaglioEvento<any> | null)[]>([])
+
 
 
     useEffect(() => {
@@ -93,6 +97,7 @@ const CreaEvento = () => {
             // }, async () => {
             //     const downloadUrl = await getDownloadURL(upload.snapshot.ref)
 
+            const dettagliFiltered = dettagli.filter(d => d !== null) as DettaglioEvento<any>[]
 
             const evento = new Evento(
                 {
@@ -103,13 +108,7 @@ const CreaEvento = () => {
                     locale: locale,
                     linkLocandina: values.linkLocandina,
                     foto: "",
-                    dettagli: [
-                        new DettaglioFumatori(true),
-                        new DettaglioMusica(GeneriMusicali["Hip-Hop"]),
-                        new DettaglioMusica(GeneriMusicali.Reggaeton),
-                        new DettaglioEta("18+")
-
-                    ]
+                    dettagli: dettagliFiltered
                 })
 
             evento.save().then(() => {
@@ -143,7 +142,14 @@ const CreaEvento = () => {
     return <>
 
         <UpperAppBar text="Crea Evento" />
-        <form onSubmit={formik.handleSubmit} style={{ gap: "2rem", display: "flex", flexDirection: "column", marginTop: "1rem", marginBottom: "10rem" }}>
+        <form onSubmit={formik.handleSubmit} style={{
+            marginInline: "1rem",
+            gap: "2rem",
+            display: "flex",
+            flexDirection: "column",
+            marginTop: "1rem",
+            marginBottom: "10rem"
+        }}>
 
             <TextField
                 fullWidth
@@ -205,7 +211,15 @@ const CreaEvento = () => {
                 helperText={formik.touched.linkLocandina && formik.errors.linkLocandina}
             />
 
-
+            <div>
+                <ModalDettagli dettagli={dettagli} setDettagli={setDettagli} />
+                {
+                    dettagli.map(dettaglio => {
+                        if (!dettaglio) return <></>
+                        return <DettaglioEventoView dettaglio={dettaglio} />
+                    })
+                }
+            </div>
             {/* <FileUploader setFile={setFile} /> */}
 
             <Button color="primary" variant="contained" fullWidth type="submit">
