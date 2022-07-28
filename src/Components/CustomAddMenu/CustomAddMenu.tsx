@@ -17,8 +17,8 @@ const CustomAddMenu = ({ elemento, open, handleClose }: CustomAddMenuProps) => {
             'aria-labelledby': 'basic-button',
         }}
     >
-        <MenuItem><Link style={{ color: "white", textDecoration: "none" }} to="/creaEvento" onClick={handleClose}>Crea Evento</Link></MenuItem>
-        <MenuItem><Link style={{ color: "white", textDecoration: "none" }} to="/creaLocale" onClick={handleClose}>Crea Locale</Link></MenuItem>
+        <Link style={{ color: "white", textDecoration: "none" }} to="/creaEvento" onClick={handleClose}><MenuItem>Crea Evento</MenuItem></Link>
+        <Link style={{ color: "white", textDecoration: "none" }} to="/creaLocale" onClick={handleClose}><MenuItem>Crea Locale</MenuItem></Link>
     </Menu>
 }
 

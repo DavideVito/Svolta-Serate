@@ -21,7 +21,7 @@ const UpperAppBar = ({ withBackButton, text, data, rightChildren }: UpperAppBarP
     const navigate = useNavigate();
 
 
-    return <AppBar position="static" style={{ marginBottom: "1.5rem" }}>
+    return <AppBar position="static" color="primary" style={{ marginBottom: "1.5rem" }}>
         <Toolbar>
             {
                 withBackButton && <IconButton onClick={() => { navigate(-1) }} sx={{ marginRight: "1rem" }}>
