@@ -59,10 +59,11 @@ interface ModalDettagliProps {
     setDettagli: React.Dispatch<React.SetStateAction<(DettaglioEvento<any> | null)[]>>,
     openButton?: React.ReactNode,
     closeButtonText?: string
-    closeButtonCallback?: () => Promise<void>
+    closeButtonCallback?: () => Promise<void>,
+    openButtonColor?: "primary" | "secondary" | "inherit" | "success" | "error" | "info" | "warning" | undefined
 }
 
-const ModalDettagli = ({ dettagli, setDettagli, openButton, closeButtonText = "Chiudi", closeButtonCallback = () => Promise.resolve() }: ModalDettagliProps) => {
+const ModalDettagli = ({ dettagli, setDettagli, openButton, closeButtonText = "Chiudi", openButtonColor = "primary", closeButtonCallback = () => Promise.resolve() }: ModalDettagliProps) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => { closeButtonCallback(); setOpen(false) };
@@ -81,7 +82,7 @@ const ModalDettagli = ({ dettagli, setDettagli, openButton, closeButtonText = "C
 
 
                 {
-                    <Button onClick={handleOpen}>
+                    <Button onClick={handleOpen} color={openButtonColor}>
                         {openButton ? openButton : "Dettagli"}
                     </Button>
                 }
