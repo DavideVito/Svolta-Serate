@@ -1,10 +1,11 @@
-import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
+import { CircularProgress, createTheme, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
 import { useMemo } from "react";
 import {
   BrowserRouter as Router,
   useRoutes,
 } from "react-router-dom";
 import CustomAppBar from "./Components/AppBar/BottomAppBar";
+
 
 
 import { lazy } from "react"
@@ -30,7 +31,12 @@ const Mappa = lazy(() => import("./Schermate/Visualizzazione/Mappa"));
 
 const App = () => {
   let routes = useRoutes([
-    { path: "/login", element: <SuspenseWrapper><Login /></SuspenseWrapper> },
+    {
+      path: "/login", element: <SuspenseWrapper>
+        <UpperAppBar text="Profilo" />
+        <Login />
+      </SuspenseWrapper>
+    },
     { path: "/creaEvento", element: <SuspenseWrapper ><CreaEvento /></SuspenseWrapper> },
     {
       path: "/creaLocale", element: <SuspenseWrapper>
@@ -43,10 +49,10 @@ const App = () => {
       </SuspenseWrapper>
     },
     {
-      path: "/lista", element: <SuspenseWrapper>
-        <UpperAppBar text="Eventi in programma" />
-        <ListaEventi />
-      </SuspenseWrapper>
+      path: "/lista", element: <SuspenseWrapper loadingCompoent={<CircularProgress />}>
+
+        < ListaEventi />
+      </SuspenseWrapper >
     },
     {
       path: "/locale/:idLocale", element: <SuspenseWrapper>

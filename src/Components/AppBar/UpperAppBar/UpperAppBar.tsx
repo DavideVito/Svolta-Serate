@@ -8,11 +8,9 @@ import { useNavigate } from "react-router-dom";
 
 
 interface UpperAppBarProps {
-
-
     text: string,
     data?: Date,
-    rightChildren?: React.ReactNode
+    rightChildren?: React.ReactNode | JSX.Element
     withBackButton?: boolean
 }
 

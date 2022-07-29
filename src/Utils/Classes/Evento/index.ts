@@ -206,7 +206,24 @@ export default class Evento {
 
     }
 
-    static getEventi = async (max: number, conLimiteMassimo = true, massimoGiorni = 2): Promise<Evento[]> => {
+
+
+    static getEventi = async ({
+
+        max,
+        conLimiteMassimo = true,
+        massimoGiorni = 2,
+        dettagli = []
+
+
+
+    }: {
+
+        max: number, conLimiteMassimo: boolean, massimoGiorni: number, dettagli: (DettaglioEvento<any> | null)[]
+
+
+
+    }): Promise<Evento[]> => {
 
         const ref = collection(firestore, KEY_COLLECTION).withConverter(eventoConverter)
 
@@ -221,12 +238,17 @@ export default class Evento {
             orderBy("data", "asc"), limitToLast(max), where("data", ">=", limiteMinimo)
         ]
 
+
+        const valoreDettagli = dettagli.filter(d => d !== null).map(dettaglio => dettaglio?.toJSON())
+
+
+        if (valoreDettagli.length > 0) {
+            constraints.push(where("dettagli", "array-contains-any", valoreDettagli))
+        }
+
         if (conLimiteMassimo) constraints.push(whereLimiteMassimo)
 
-
-
         const snapshot = await getDocs(query(ref, ...constraints))
-
         const { docs } = snapshot
 
         return docs.map(documento => documento.data())

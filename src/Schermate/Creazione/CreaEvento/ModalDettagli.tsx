@@ -56,13 +56,16 @@ const style = {
 
 interface ModalDettagliProps {
     dettagli: (DettaglioEvento<any> | null)[]
-    setDettagli: React.Dispatch<React.SetStateAction<(DettaglioEvento<any> | null)[]>>
+    setDettagli: React.Dispatch<React.SetStateAction<(DettaglioEvento<any> | null)[]>>,
+    openButton?: React.ReactNode,
+    closeButtonText?: string
+    closeButtonCallback?: () => Promise<void>
 }
 
-const ModalDettagli = ({ dettagli, setDettagli }: ModalDettagliProps) => {
+const ModalDettagli = ({ dettagli, setDettagli, openButton, closeButtonText = "Chiudi", closeButtonCallback = () => Promise.resolve() }: ModalDettagliProps) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => { closeButtonCallback(); setOpen(false) };
 
     const [selectedKey, setSelectedKey] = useState<string>('')
 
@@ -74,7 +77,18 @@ const ModalDettagli = ({ dettagli, setDettagli }: ModalDettagliProps) => {
 
     return (
         <div>
-            <div style={{ display: "flex", justifyContent: "center" }}><Button onClick={handleOpen}>Dettagli</Button></div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+
+
+                {
+                    <Button onClick={handleOpen}>
+                        {openButton ? openButton : "Dettagli"}
+                    </Button>
+                }
+
+
+
+            </div>
             <Modal
                 aria-labelledby="spring-modal-title"
                 aria-describedby="spring-modal-description"
@@ -125,7 +139,7 @@ const ModalDettagli = ({ dettagli, setDettagli }: ModalDettagliProps) => {
                             }
                         </div>
 
-                        <Button onClick={handleClose}>Chiudi</Button>
+                        <Button onClick={handleClose}>{closeButtonText}</Button>
                     </Box>
                 </Fade>
             </Modal>

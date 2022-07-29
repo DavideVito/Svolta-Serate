@@ -1,6 +1,5 @@
 import { Avatar, BottomNavigation, BottomNavigationAction, CircularProgress } from "@mui/material"
 
-import AddIcon from '@mui/icons-material/Add';
 import MapIcon from '@mui/icons-material/Map';
 import ListIcon from '@mui/icons-material/List';
 import { AccountCircle } from "@mui/icons-material";
@@ -11,6 +10,7 @@ import CustomAddMenu from "../../CustomAddMenu";
 import { useState } from "react";
 
 
+
 const BottomAppBar = () => {
 
     const [user, loading] = useAuthState(auth);
@@ -19,9 +19,6 @@ const BottomAppBar = () => {
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
     const handleClose = () => setAnchorEl(null)
 
 
@@ -44,11 +41,14 @@ const BottomAppBar = () => {
             icon={<ListIcon />}
         />
 
-        <BottomNavigationAction
+
+
+
+        {/* <BottomNavigationAction
             label="Aggiungi"
             showLabel
 
-            color="primary" aria-label="add" onClick={handleClick} icon={<AddIcon />} />
+            color="primary" aria-label="add" onClick={handleClick} icon={<AddIcon />} /> */}
 
         <CustomAddMenu open={Boolean(anchorEl)} handleClose={handleClose} elemento={anchorEl} />
 
