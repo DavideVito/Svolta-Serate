@@ -6,22 +6,16 @@ import { AccountCircle } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../Utils/Firebase/init";
-import CustomAddMenu from "../../CustomAddMenu";
-import { useState } from "react";
 
 
 const stileProfilo = { width: "24px", height: "24px" }
 
+
+
+
 const BottomAppBar = () => {
 
     const [user, loading] = useAuthState(auth);
-
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-
-
-    const handleClose = () => setAnchorEl(null)
-
 
     return <BottomNavigation sx={{ zIndex: "3", bottom: 0, position: "fixed", width: "100vw", gap: "0.5rem" }}>
 
@@ -44,14 +38,6 @@ const BottomAppBar = () => {
 
 
 
-
-        {/* <BottomNavigationAction
-            label="Aggiungi"
-            showLabel
-
-            color="primary" aria-label="add" onClick={handleClick} icon={<AddIcon />} /> */}
-
-        <CustomAddMenu open={Boolean(anchorEl)} handleClose={handleClose} elemento={anchorEl} />
 
         <>
             {

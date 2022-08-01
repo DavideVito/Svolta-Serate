@@ -1,4 +1,4 @@
-import { Alert, Button, Grid, Typography } from "@mui/material"
+import { Alert, Button, Grid, IconButton, SpeedDial, SpeedDialAction, Typography } from "@mui/material"
 import { logEvent } from "firebase/analytics"
 import { useEffect, useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
@@ -11,7 +11,8 @@ import { analytics, auth } from "../../../Utils/Firebase/init"
 import { formattaData } from "../../../Utils/Functions/Formattatori"
 import DettagliLocale from "../DettagliLocale"
 import { DettaglioEventoView } from "./DettaglioEventoView"
-
+import ShareIcon from '@mui/icons-material/Share';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 
 export const DettagliEvento = () => {
 
@@ -48,21 +49,41 @@ export const DettagliEvento = () => {
 
 
     return <>
+        {navigator?.canShare && navigator.canShare() && <>
+            <SpeedDial
+                sx={{ position: 'absolute', marginBottom: "4rem", bottom: 16, right: 16 }}
+                icon={<SpeedDialIcon />} ariaLabel={"Azioni"}>
+                <SpeedDialAction
+                    icon={
+                        <IconButton onClick={() => {
+
+
+                            navigator.share({
+                                title: evento.nome,
+                                text: `${evento.descrizione} ${formattaData(evento.data)}`,
+                                url: `https://svolta-serate.davidevitiello.dev/evento/${evento.id}`
+                            })
+                        }}>
+                            <ShareIcon />
+
+                        </IconButton>}
+                    tooltipTitle="Condividi"
+                />
+
+
+
+            </SpeedDial>
+
+        </>}
+
+
         <UpperAppBar text={evento.nome} withBackButton={true} rightChildren={<div>
             {formattaData(evento.data)}
         </div>} />
         <div style={{ display: "flex", justifyContent: "center", flexDirection: "column" }}>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-                {/* <div style={{ display: "flex", justifyContent: "center" }}>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
 
-                        <Typography align="center" variant="h3">
-                            {evento.descrizione}
-                        </Typography>
-
-                    </div>
-                </div> */}
 
 
                 <Typography variant="h4" align="center">{evento.descrizione}</Typography>
@@ -82,7 +103,7 @@ export const DettagliEvento = () => {
                     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: "1rem", display: "flex", justifyContent: "center" }}>
                         {
                             evento.dettagli.map((dettaglio) => {
-                                return <Grid item xs={6} style={{ maxWidth: "10rem" }}>
+                                return <Grid item xs={6} key={dettaglio.getFirestoreKey()} style={{ maxWidth: "10rem" }}>
                                     <DettaglioEventoView dettaglio={dettaglio} />
                                 </Grid>
                             })
@@ -161,12 +182,16 @@ const PartecipantiComponent = ({ evento }: PartecipantiComponentProps) => {
 
 
     return <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "2rem" }}>
+
+
+
         <Typography title="Partecipanti" align="center" variant="h4">👨‍👧‍👧: {partecipanti}</Typography>
 
 
 
 
-        {user &&
+        {
+            user &&
 
             <div style={{ display: "flex", justifyContent: "center" }}>
                 {partecipa ? <Button style={{ fontSize: "2.5rem" }} onClick={handleQuittaClick}>❌</Button> :

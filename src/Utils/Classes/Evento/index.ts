@@ -133,7 +133,9 @@ export default class Evento {
 
         const ref = collection(firestore, KEY_COLLECTION).withConverter(eventoConverter)
 
-        debugger
+        const promiseInserimento = await addDoc(ref, this)
+
+
 
         const promiseDettaglioEvento_Eventi = this.dettagli.map(dettaglio => {
 
@@ -142,13 +144,12 @@ export default class Evento {
 
             const summary = this.getSummary()
 
-            const documentReference = doc(firestore, "DettaglioEvento", chiave, "eventi", ref.id)
+            const documentReference = doc(firestore, "DettaglioEvento", chiave, "eventi", promiseInserimento.id)
 
             return setDoc(documentReference, summary)
 
         })
 
-        const promiseInserimento = addDoc(ref, this)
 
 
         return await Promise.all([promiseInserimento, promiseDettaglioEvento_Eventi])
@@ -281,6 +282,7 @@ export default class Evento {
 
         let daRet = null
 
+
         if (dettagli.length > 0) {
             const documenti_dettagli = dettagli.filter(d => d !== null).map(dettaglio => dettaglio?.getFirestoreKey()) as string[]
 
@@ -315,6 +317,7 @@ export default class Evento {
 
 
             ));
+
         }
         else {
 
