@@ -1,8 +1,10 @@
 import { Button } from "@mui/material"
 import { useState } from "react"
+import { LoadingWithLabel } from "../Loading/Loading"
 
 interface FileUploaderProps {
     setFile: React.Dispatch<React.SetStateAction<File | undefined>>
+    progresso?: number
 }
 
 const FileUploaded = ({ url, removeFile }: { url: string, removeFile: () => void }) => {
@@ -14,6 +16,7 @@ const FileUploaded = ({ url, removeFile }: { url: string, removeFile: () => void
     </>
 
 }
+
 const NoFile = ({ handleChange }: { handleChange: (e: any) => void }) => {
     return <div style={{ display: "flex", flexDirection: "column" }}>
 
@@ -25,7 +28,11 @@ const NoFile = ({ handleChange }: { handleChange: (e: any) => void }) => {
 
 }
 
-const FileUploader = ({ setFile }: FileUploaderProps) => {
+const UploadingComponent = ({ progresso }: { progresso: number }) => {
+    return <div style={{ display: "flex", justifyContent: "center" }}><LoadingWithLabel value={progresso} /></div>
+}
+
+const FileUploader = ({ setFile, progresso }: FileUploaderProps) => {
 
     const [url, setUrl] = useState<string | undefined>()
 
@@ -50,7 +57,9 @@ const FileUploader = ({ setFile }: FileUploaderProps) => {
 
     }
 
-
+    if (typeof progresso !== "undefined") {
+        return <UploadingComponent progresso={progresso} />
+    }
 
 
     return <div style={{ display: "flex", gap: "1rem", flexDirection: "column" }}>

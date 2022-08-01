@@ -25,6 +25,7 @@ export default function SignUp() {
 
     const [messaggio, setMessaggio] = useState<string | undefined>(undefined)
     const [file, setFile] = useState<File | undefined>(undefined)
+    const [progresso, setProgresso] = useState<number | undefined>(undefined)
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -53,7 +54,10 @@ export default function SignUp() {
 
 
             const percentuale = (bytesTransferred / totalBytes) * 100
-            console.log(percentuale)
+
+            setProgresso(percentuale)
+
+
         }, (e: StorageError) => {
 
         }, async () => {
@@ -91,8 +95,7 @@ export default function SignUp() {
                 message={messaggio}
             />
 
-
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="xs" style={{ overflow: "auto", display: "flex", marginBottom: "2rem" }}>
                 <CssBaseline />
                 <Box
                     sx={{
@@ -123,7 +126,7 @@ export default function SignUp() {
                             </Grid>
 
                             <Grid item xs={12}>
-                                <FileUploader setFile={setFile} />
+                                <FileUploader setFile={setFile} progresso={progresso} />
                             </Grid>
 
                             <Grid item xs={12}>

@@ -7,7 +7,7 @@ import {
 import CustomAppBar from "./Components/AppBar/BottomAppBar";
 
 
-
+import "./index.css"
 import { lazy } from "react"
 import UpperAppBar from "./Components/AppBar/UpperAppBar";
 import SuspenseWrapper from "./Components/SuspenseWrapper/SuspenseWrapper";
@@ -40,7 +40,6 @@ const App = () => {
     },
     {
       path: "/SignUp", element: <SuspenseWrapper>
-        <UpperAppBar text="Profilo" />
         <SignUp />
       </SuspenseWrapper>
     },

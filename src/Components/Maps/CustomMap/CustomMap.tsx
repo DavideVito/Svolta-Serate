@@ -17,11 +17,14 @@ interface CustomMapProps {
     }
 
     zoom?: number,
+    geocoder?: JSX.Element
 
 
 
 
 }
+
+export const MAPBOX_TOKEN = "pk.eyJ1IjoiZGF2aWRldml0byIsImEiOiJja2xudHlkcXUwbGk1Mndtc2Vzejg2ZHdqIn0.G4PHrVFPRPPkEmVFX4OA3w"
 
 const CustomMap = React.forwardRef<MapRef, CustomMapProps>((
 
@@ -30,7 +33,8 @@ const CustomMap = React.forwardRef<MapRef, CustomMapProps>((
         zoom = 10,
         children,
         posizione = new Posizione(41.902782, 12.496366),
-        widthHeight = { width: "100vw", height: "100vh" }
+        widthHeight = { width: "100vw", height: "100vh" },
+        geocoder = <></>
     }: CustomMapProps
 
     , ref) => {
@@ -60,8 +64,9 @@ const CustomMap = React.forwardRef<MapRef, CustomMapProps>((
                 }}
 
                 mapStyle={stileMappa}
-                mapboxAccessToken='pk.eyJ1IjoiZGF2aWRldml0byIsImEiOiJja2xudHlkcXUwbGk1Mndtc2Vzejg2ZHdqIn0.G4PHrVFPRPPkEmVFX4OA3w'
+                mapboxAccessToken={MAPBOX_TOKEN}
             >
+                {geocoder}
                 <FullscreenControl position="top-left" />
                 <NavigationControl position="top-left" />
 

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import * as Yup from "yup"
 import ModalLocale from "../../../Components/ModalIndirizzoLocale";
-import { Place } from "../../../Utils/Functions/SearchPlace";
 import Locale from "../../../Utils/Classes/Locale";
 import { Posizione } from "../../../Utils/Classes/Locale/Posizione";
 import { auth } from "../../../Utils/Firebase/init";
@@ -13,6 +12,7 @@ import Pin from "../../Visualizzazione/Mappa/Pin";
 import { lazy } from "react";
 import SuspenseWrapper from "../../../Components/SuspenseWrapper/SuspenseWrapper";
 import UpperAppBar from "../../../Components/AppBar/UpperAppBar";
+import { GeocoderResult } from "../../../Components/Maps/CustomMap/GeocoderControl";
 
 
 
@@ -54,20 +54,17 @@ const CreaLocaleSchema = Yup.object().shape({
 const CreaLocale = () => {
 
     const [user] = useAuthState(auth)
-    const [postoSelezionato, sps] = useState<Place | undefined>(undefined)
+    const [postoSelezionato, sps] = useState<GeocoderResult | undefined>(undefined)
     const [localeCreato, setLocaleCreato] = useState<Locale | undefined>(undefined)
     const [erroreCreazione, setErroreCreazione] = useState<any | undefined>(undefined)
 
 
     const setPostoSelezionato = (data: any) => {
 
-
-
         sps(data)
 
         if (!data) return
-
-        const { latitude, longitude } = data
+        const [longitude, latitude] = data.center
 
         formik.values.latitudine = latitude
         formik.values.longitudine = longitude
@@ -128,7 +125,7 @@ const CreaLocale = () => {
     return <>
 
         <UpperAppBar text="Crea Locale" />
-        <form onSubmit={formik.handleSubmit} style={{ marginTop: "1rem", gap: "2rem", display: "flex", flexDirection: "column" }}>
+        <form onSubmit={formik.handleSubmit} style={{ marginTop: "1rem", gap: "2rem", marginBottom: "2rem", display: "flex", flexDirection: "column" }}>
 
 
             <div style={{ display: "flex", marginInline: "1rem", flexDirection: "row", gap: "1rem", justifyContent: "space-evenly" }}>
@@ -155,19 +152,19 @@ const CreaLocale = () => {
                 />
             </div>
 
-            <ModalLocale postoSelezionato={postoSelezionato} setPostoSelezionato={setPostoSelezionato} />
+            <ModalLocale setPostoSelezionato={setPostoSelezionato} />
 
             {postoSelezionato && <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div style={{ display: "flex", marginInline: "1rem", flexDirection: "row", gap: "1rem", justifyContent: "space-evenly" }}>
 
                     <SuspenseWrapper text="Caricamento Mappa">
-                        <CustomMap posizione={new Posizione(postoSelezionato.latitude, postoSelezionato.longitude)} zoom={13.5} widthHeight={{ width: "100vw", height: "35vh" }} >
+                        <CustomMap posizione={new Posizione(postoSelezionato.center.at(1) ?? 0, postoSelezionato.center.at(0) ?? 0)} zoom={13.5} widthHeight={{ width: "100vw", height: "35vh" }} >
 
 
                             <Marker
                                 key={`marker`}
-                                longitude={postoSelezionato.longitude}
-                                latitude={postoSelezionato.latitude}
+                                longitude={postoSelezionato.center.at(0) ?? 0}
+                                latitude={postoSelezionato.center.at(1) ?? 0}
                                 anchor="bottom"
                                 draggable
                                 onDragEnd={e => {
