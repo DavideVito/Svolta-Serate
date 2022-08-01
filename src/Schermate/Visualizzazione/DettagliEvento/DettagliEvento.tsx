@@ -160,7 +160,7 @@ const PartecipantiComponent = ({ evento }: PartecipantiComponentProps) => {
 
 
 
-    return <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+    return <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "2rem" }}>
         <Typography title="Partecipanti" align="center" variant="h4">👨‍👧‍👧: {partecipanti}</Typography>
 
 

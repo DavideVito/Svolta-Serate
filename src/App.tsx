@@ -57,7 +57,7 @@ const App = () => {
     {
       path: "/lista", element: <SuspenseWrapper loadingCompoent={<CircularProgress />}>
 
-        < ListaEventi />
+        <ListaEventi />
       </SuspenseWrapper >
     },
     {
