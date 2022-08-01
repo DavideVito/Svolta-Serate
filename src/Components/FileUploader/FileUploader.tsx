@@ -1,11 +1,6 @@
 import { Button } from "@mui/material"
 import { useState } from "react"
 import { LoadingWithLabel } from "../Loading/Loading"
-import { FileUploader as BaseUIFileUploader } from "baseui/file-uploader";
-
-import { BaseProvider, DarkTheme } from "baseui";
-import { Provider as StyletronProvider } from "styletron-react";
-import { Client as Styletron } from "styletron-engine-atomic";
 
 interface FileUploaderProps {
     setFile: React.Dispatch<React.SetStateAction<File | undefined>>
@@ -23,16 +18,9 @@ const FileUploaded = ({ url, removeFile }: { url: string, removeFile: () => void
 }
 
 const NoFile = ({ handleChange }: { handleChange: (e: any) => void }) => {
-
-    const engine = new Styletron();
-
     return <div style={{ display: "flex", flexDirection: "column" }}>
 
-        <StyletronProvider value={engine}>
-            <BaseProvider theme={DarkTheme}>
-                <BaseUIFileUploader onDropAccepted={handleChange} />
-            </BaseProvider>
-        </StyletronProvider>
+        <input type="file" accept="image" onChange={handleChange} />
 
 
 
@@ -55,7 +43,7 @@ const FileUploader = ({ setFile, progresso }: FileUploaderProps) => {
     }
 
     const handleChange = (e: any) => {
-        const [f] = e//.target.files
+        const [f] = e.target.files
         _setFile(f)
     }
 
