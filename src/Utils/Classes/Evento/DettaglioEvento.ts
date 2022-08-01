@@ -24,8 +24,14 @@ abstract class DettaglioEvento<T>  {
         this.multiple = multiple
     }
 
+
+
     abstract parseValue(value: any): T
     abstract getValueIcon(): string;
+
+    getFirestoreKey(): string {
+        return `${this.chiave}_${this.valore}`
+    }
 
     toJSON() {
         return { chiave: this.chiave, valore: this.valore }

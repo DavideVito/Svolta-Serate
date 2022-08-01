@@ -1,11 +1,11 @@
 import { Card, CardContent, Typography } from "@mui/material"
 import { Link } from "react-router-dom"
-import Evento from "../../../Utils/Classes/Evento"
+import Evento, { EventoSummary } from "../../../Utils/Classes/Evento"
 import { formattaData } from "../../../Utils/Functions/Formattatori"
 import LocaleCard from "../LocaleCard"
 
 interface EventoCardProps {
-    evento: Evento,
+    evento: Evento | EventoSummary,
     withLocaleButton?: boolean
 
 }
@@ -40,11 +40,11 @@ const EventoCard = ({ evento, withLocaleButton = true }: EventoCardProps) => {
 
                 </Link>
 
-                {
+                {/* {
                     withLocaleButton && <Link to={`/locale/${evento.locale.id}`}>
                         <LocaleCard locale={evento.locale} />
                     </Link>
-                }
+                } */}
 
 
             </div>

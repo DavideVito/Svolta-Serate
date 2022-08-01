@@ -30,7 +30,6 @@ const UserCard = ({ user, logout }: UserCardProps) => {
         </CardContent>
         <CardActions>
             <Button size="small" onClick={logout}>Logout</Button>
-            <Button size="small">Learn More</Button>
         </CardActions>
     </Card></div>
 }

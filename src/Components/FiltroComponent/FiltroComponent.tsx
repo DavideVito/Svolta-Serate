@@ -21,7 +21,7 @@ const FiltroCompoent = ({ dettagli, setDettagli, filtra }: FiltroCompoentProps) 
                 </Badge> : <FilterListIcon />
 
 
-        } closeButtonText={"Filtra"} closeButtonCallback={filtra} openButtonColor={"secondary"} />
+        } closeButtonText={"Filtra"} closeButtonCallback={filtra} openButtonColor={"inherit"} />
 
     </>
 

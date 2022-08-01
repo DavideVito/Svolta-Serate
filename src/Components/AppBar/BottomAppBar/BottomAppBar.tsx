@@ -10,14 +10,15 @@ import CustomAddMenu from "../../CustomAddMenu";
 import { useState } from "react";
 
 
+const stileProfilo = { width: "24px", height: "24px" }
 
 const BottomAppBar = () => {
 
     const [user, loading] = useAuthState(auth);
 
-    console.log(loading)
-
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+
 
     const handleClose = () => setAnchorEl(null)
 
@@ -66,17 +67,17 @@ const BottomAppBar = () => {
                             <>
                                 {user ?
                                     <Avatar
-                                        style={{ width: "24px", height: "24px" }}
+                                        style={stileProfilo}
                                         src={user.photoURL ?? ""} /> :
                                     <AccountCircle
-                                        style={{ width: "24px", height: "24px" }} />
+                                        style={stileProfilo} />
                                 }
                             </>
 
                         }
                     />
                     :
-                    <CircularProgress />
+                    <CircularProgress style={stileProfilo} />
 
             }
         </>

@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material"
+import { Button } from "@mui/material"
 import { useState } from "react"
 
 interface FileUploaderProps {
@@ -55,7 +55,6 @@ const FileUploader = ({ setFile }: FileUploaderProps) => {
 
     return <div style={{ display: "flex", gap: "1rem", flexDirection: "column" }}>
 
-        <Typography align="center" variant="h4">Foto Serata</Typography>
         <div style={{ display: "flex", justifyContent: "center" }}>
 
             {url ? <FileUploaded url={url} removeFile={() => _setFile(undefined)} /> : <NoFile handleChange={handleChange} />}

@@ -15,13 +15,12 @@ const EventiCreatiComponent = ({ user }: { user: User }) => {
     const [eventiCreati, setEventiCreati] = useState<Evento[] | undefined>(undefined)
 
     useEffect(() => {
-
         Evento.getEventiCreatiDaUtente(user).then((eventi) => setEventiCreati(eventi))
-
-
     }, [user])
 
-    if (!eventiCreati) return <div>Nessun evento creato</div>
+    if (!eventiCreati) return <div></div>
+
+    if (!eventiCreati.length) return <></>
 
 
     return <div>
@@ -75,6 +74,7 @@ const LocaliCreatiComponent = ({ user }: { user: User }) => {
 
     if (!localiCreati) return <div>Nessun locale creato</div>
 
+    if (!localiCreati.length) return <></>
 
     return <div>
 

@@ -2,6 +2,7 @@ import { Button, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
 import Map, { FullscreenControl, MapRef, NavigationControl } from 'react-map-gl';
 import { Posizione } from '../../../Utils/Classes/Locale/Posizione';
+
 const STILE_LIGHT = "mapbox://styles/mapbox/streets-v9"
 const STILE_DARK = "mapbox://styles/mapbox/dark-v9"
 const STILE_SATELLITE = "mapbox://styles/mapbox/satellite-v9"

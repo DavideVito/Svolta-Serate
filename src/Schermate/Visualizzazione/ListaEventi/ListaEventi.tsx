@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import Evento from "../../../Utils/Classes/Evento";
+import Evento, { EventoSummary } from "../../../Utils/Classes/Evento";
 
 
 import EventCard from "../../../Components/Card/EventoCard";
@@ -15,7 +15,7 @@ const INCREMENTO = 1
 function ListaEventi() {
 
   const [progresso, setProgresso] = useState(2)
-  const [eventi, setEventi] = useState<Evento[]>([])
+  const [eventi, setEventi] = useState<EventoSummary[]>([])
   const [dettagli, setDettagli] = useState<(DettaglioEvento<any> | null)[]>([])
 
 
@@ -34,7 +34,7 @@ function ListaEventi() {
 
   return <>
 
-    <UpperAppBar text="Eventi in programma" rightChildren={
+    <UpperAppBar text="Eventi" rightChildren={
 
 
 
@@ -46,7 +46,9 @@ function ListaEventi() {
     } />
 
     <Grid container spacing={1}>
-      {eventi.map((evento: Evento) => <Grid key={evento.id} item xs={12} md={12}><EventCard evento={evento} /></Grid>)}
+      {eventi.map((evento: EventoSummary) => <Grid key={evento.id} item xs={12} md={12}>
+        <EventCard evento={evento} />
+      </Grid>)}
 
 
       <Grid item sx={{ width: "100%", marginInline: "5rem", marginTop: "2rem" }}>
@@ -56,11 +58,8 @@ function ListaEventi() {
           fullWidth
           onClick={() => {
             const newProgresso = progresso + INCREMENTO
-            // setProgresso(p => p + INCREMENTO)
             setProgresso(newProgresso)
-
             filtra(newProgresso, dettagli)
-
           }}>
           Carica Altro
         </Button></Grid>

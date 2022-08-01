@@ -47,10 +47,7 @@ const CreaEvento = () => {
 
     useEffect(() => {
 
-
         Locale.getLocali().then(l => {
-
-
             const customLocali = [new Locale("", "", new Posizione(0, 0), [], {} as User, ""), ...l]
             setLocali(customLocali)
         })

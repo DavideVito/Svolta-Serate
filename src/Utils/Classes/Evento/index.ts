@@ -2,7 +2,7 @@ import { User } from "firebase/auth";
 import { addDoc, collection, getDocs, orderBy, query, where, limitToLast, getDoc, doc, updateDoc, increment, serverTimestamp, setDoc, deleteDoc } from "firebase/firestore";
 import moment from "moment";
 import { firestore } from "../../Firebase/init";
-import Locale from "../Locale";
+import Locale, { AltreInfo } from "../Locale";
 import DettaglioEvento from "./DettaglioEvento";
 
 
@@ -68,6 +68,22 @@ interface ConstructorParams {
     partecipanti?: number
 }
 
+export interface EventoSummary {
+
+    id: string,
+    nome: string
+    descrizione: string
+    data: Date
+    locale: {
+        nome: string;
+        descrizione: string;
+        posizione: any;
+        altreInfo: AltreInfo[];
+        id: string | undefined;
+    }
+
+}
+
 export default class Evento {
 
     nome: string
@@ -99,6 +115,17 @@ export default class Evento {
         this.dettagli = dettagli
     }
 
+    getSummary = (): EventoSummary => {
+
+        return {
+            id: this.id!,
+            nome: this.nome,
+            descrizione: this.descrizione,
+            data: this.data,
+            locale: this.locale.toJSON ? this.locale.toJSON() : this.locale,
+        }
+    }
+
 
     save = async () => {
 
@@ -106,8 +133,25 @@ export default class Evento {
 
         const ref = collection(firestore, KEY_COLLECTION).withConverter(eventoConverter)
 
-        return await addDoc(ref, this)
+        debugger
 
+        const promiseDettaglioEvento_Eventi = this.dettagli.map(dettaglio => {
+
+
+            const chiave = dettaglio.getFirestoreKey()
+
+            const summary = this.getSummary()
+
+            const documentReference = doc(firestore, "DettaglioEvento", chiave, "eventi", ref.id)
+
+            return setDoc(documentReference, summary)
+
+        })
+
+        const promiseInserimento = addDoc(ref, this)
+
+
+        return await Promise.all([promiseInserimento, promiseDettaglioEvento_Eventi])
 
     }
 
@@ -162,7 +206,6 @@ export default class Evento {
 
     }
 
-
     static async getEventiCreatiDaUtente(user: User): Promise<Evento[]> {
 
         const ref = collection(firestore, KEY_COLLECTION).withConverter(eventoConverter)
@@ -206,8 +249,6 @@ export default class Evento {
 
     }
 
-
-
     static getEventi = async ({
 
         max,
@@ -215,17 +256,13 @@ export default class Evento {
         massimoGiorni = 2,
         dettagli = []
 
-
-
     }: {
 
         max: number, conLimiteMassimo: boolean, massimoGiorni: number, dettagli: (DettaglioEvento<any> | null)[]
 
 
 
-    }): Promise<Evento[]> => {
-
-        const ref = collection(firestore, KEY_COLLECTION).withConverter(eventoConverter)
+    }): Promise<EventoSummary[]> => {
 
 
         const limiteMinimo = moment().subtract(4, "hours").toDate()
@@ -238,23 +275,80 @@ export default class Evento {
             orderBy("data", "asc"), limitToLast(max), where("data", ">=", limiteMinimo)
         ]
 
-
-        const valoreDettagli = dettagli.filter(d => d !== null).map(dettaglio => dettaglio?.toJSON())
-
-
-        if (valoreDettagli.length > 0) {
-            constraints.push(where("dettagli", "array-contains-any", valoreDettagli))
-        }
-
         if (conLimiteMassimo) constraints.push(whereLimiteMassimo)
 
-        const snapshot = await getDocs(query(ref, ...constraints))
-        const { docs } = snapshot
 
-        return docs.map(documento => documento.data())
+
+        let daRet = null
+
+        if (dettagli.length > 0) {
+            const documenti_dettagli = dettagli.filter(d => d !== null).map(dettaglio => dettaglio?.getFirestoreKey()) as string[]
+
+
+            const promiseData = documenti_dettagli.map(async (firestoreKey) => {
+
+
+                const collection_ref = collection(firestore, "DettaglioEvento", firestoreKey, "eventi")
+
+
+
+                const snapshot = await getDocs(query(collection_ref, ...constraints))
+                const { docs } = snapshot
+                return docs.map(documento => {
+                    const data = documento.data()
+                    return { id: documento.id, ...data, data: data.data.toDate() }
+                })
+
+
+            })
+
+            const dataNotFlatten = await Promise.all(promiseData)
+
+            daRet = dataNotFlatten.reduce((a, b) => a.filter(c =>
+
+                b.some((val) => {
+
+                    return val.id === c.id
+
+
+                })
+
+
+            ));
+        }
+        else {
+
+
+            const ref = collection(firestore, KEY_COLLECTION).withConverter(eventoConverter)
+            const snapshot = await getDocs(query(ref, ...constraints))
+            const { docs } = snapshot
+
+            const eventi = docs.map(documento => documento.data())
+
+            daRet = eventi.map(evento => evento.getSummary())
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        //        const data = dataNotFlatten.flat()
+
+
+
+
+
+
+        return daRet as EventoSummary[]
 
     }
-
 
     static getEvento = async (id: string): Promise<Evento | undefined> => {
 

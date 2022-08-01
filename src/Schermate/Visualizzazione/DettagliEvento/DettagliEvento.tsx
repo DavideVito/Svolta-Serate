@@ -1,4 +1,5 @@
 import { Alert, Button, Grid, Typography } from "@mui/material"
+import { logEvent } from "firebase/analytics"
 import { useEffect, useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useParams } from "react-router-dom"
@@ -6,7 +7,7 @@ import UpperAppBar from "../../../Components/AppBar/UpperAppBar"
 import InstagramEmbed from "../../../Components/InstagramEmbed"
 import Loading from "../../../Components/Loading"
 import Evento from "../../../Utils/Classes/Evento"
-import { auth } from "../../../Utils/Firebase/init"
+import { analytics, auth } from "../../../Utils/Firebase/init"
 import { formattaData } from "../../../Utils/Functions/Formattatori"
 import DettagliLocale from "../DettagliLocale"
 import { DettaglioEventoView } from "./DettaglioEventoView"
@@ -130,6 +131,8 @@ const PartecipantiComponent = ({ evento }: PartecipantiComponentProps) => {
         if (!user) return
 
         await evento.incrementPartecipanti(user)
+
+        logEvent(analytics, "utente_partecipa", { utente: user.email, partecipanti: partecipanti + 1 })
 
         setPartecipanti(p => p + 1)
 

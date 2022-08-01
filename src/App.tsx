@@ -11,6 +11,7 @@ import CustomAppBar from "./Components/AppBar/BottomAppBar";
 import { lazy } from "react"
 import UpperAppBar from "./Components/AppBar/UpperAppBar";
 import SuspenseWrapper from "./Components/SuspenseWrapper/SuspenseWrapper";
+import SignUp from "./Schermate/SignUp";
 
 
 
@@ -35,6 +36,12 @@ const App = () => {
       path: "/login", element: <SuspenseWrapper>
         <UpperAppBar text="Profilo" />
         <Login />
+      </SuspenseWrapper>
+    },
+    {
+      path: "/SignUp", element: <SuspenseWrapper>
+        <UpperAppBar text="Profilo" />
+        <SignUp />
       </SuspenseWrapper>
     },
     { path: "/creaEvento", element: <SuspenseWrapper ><CreaEvento /></SuspenseWrapper> },
