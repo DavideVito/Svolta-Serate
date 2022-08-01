@@ -2,7 +2,6 @@ import { Card, CardContent, Typography } from "@mui/material"
 import { Link } from "react-router-dom"
 import Evento, { EventoSummary } from "../../../Utils/Classes/Evento"
 import { formattaData } from "../../../Utils/Functions/Formattatori"
-import LocaleCard from "../LocaleCard"
 
 interface EventoCardProps {
     evento: Evento | EventoSummary,

@@ -17,9 +17,10 @@ interface CustomMapProps {
     }
 
     zoom?: number,
-    geocoder?: JSX.Element
+    geocoder?: JSX.Element,
 
 
+    withSatelliteButton?: boolean
 
 
 }
@@ -34,7 +35,8 @@ const CustomMap = React.forwardRef<MapRef, CustomMapProps>((
         children,
         posizione = new Posizione(41.902782, 12.496366),
         widthHeight = { width: "100vw", height: "100vh" },
-        geocoder = <></>
+        geocoder = <></>,
+        withSatelliteButton = false
     }: CustomMapProps
 
     , ref) => {
@@ -76,8 +78,9 @@ const CustomMap = React.forwardRef<MapRef, CustomMapProps>((
 
 
         </div>
-        <Button type="button" onClick={handleChange}>{stileMappa === STILE_SATELLITE ? "Reimposta" : "Satellite"}</Button>
-    </div>
+        {withSatelliteButton &&
+            <Button type="button" onClick={handleChange}>{stileMappa === STILE_SATELLITE ? "Reimposta" : "Satellite"}</Button>
+        }</div>
 })
 
 export default CustomMap

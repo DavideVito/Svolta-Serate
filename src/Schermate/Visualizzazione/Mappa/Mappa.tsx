@@ -7,7 +7,7 @@ import CustomControl from '../../../Components/Maps/CustomMap/CustomControl';
 import ModalInformazioniEvento from '../../../Components/ModalInformazioniEvento';
 import Evento from '../../../Utils/Classes/Evento';
 import Locale, { Posizione } from '../../../Utils/Classes/Locale';
-import Pin from './Pin';
+import Pin from '../../../Components/Maps/CustomMap/Pin';
 
 
 import NearMeIcon from '@mui/icons-material/NearMe';

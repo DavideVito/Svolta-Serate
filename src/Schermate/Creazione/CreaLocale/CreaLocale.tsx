@@ -8,7 +8,7 @@ import Locale from "../../../Utils/Classes/Locale";
 import { Posizione } from "../../../Utils/Classes/Locale/Posizione";
 import { auth } from "../../../Utils/Firebase/init";
 import { Marker } from "react-map-gl";
-import Pin from "../../Visualizzazione/Mappa/Pin";
+import Pin from "../../../Components/Maps/CustomMap/Pin";
 import { lazy } from "react";
 import SuspenseWrapper from "../../../Components/SuspenseWrapper/SuspenseWrapper";
 import UpperAppBar from "../../../Components/AppBar/UpperAppBar";

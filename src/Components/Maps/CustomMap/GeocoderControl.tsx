@@ -1,8 +1,10 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { useControl, Marker, MarkerProps, ControlPosition } from 'react-map-gl';
 //@ts-ignore
 import MapboxGeocoder, { GeocoderOptions } from '@mapbox/mapbox-gl-geocoder';
+import Pin from './Pin';
+
+
 
 export interface GeocoderResultResponse {
     result: GeocoderResult;
@@ -89,9 +91,12 @@ export default function GeocoderControl(props: GeocoderControlProps) {
                     (result.center || (result.geometry?.type === 'Point' && result.geometry.coordinates));
                 if (location && props.marker) {
 
+                    setMarker(
 
-                    //@ts-ignore
-                    setMarker(<Marker {...props.marker} longitude={location[0]} latitude={location[1]} />);
+                        //@ts-ignore
+                        <Marker {...props.marker} longitude={location[0]} latitude={location[1]} >
+                            <Pin />
+                        </Marker>);
                 } else {
                     setMarker(null);
                 }

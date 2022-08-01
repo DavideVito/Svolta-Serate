@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import CustomMap from "../../../Components/Maps/CustomMap"
 import Locale from "../../../Utils/Classes/Locale"
-import Pin from "../Mappa/Pin"
+import Pin from "../../../Components/Maps/CustomMap/Pin"
 import CustomControl from "../../../Components/Maps/CustomMap/CustomControl"
 import NavigationIcon from '@mui/icons-material/Navigation';
 
