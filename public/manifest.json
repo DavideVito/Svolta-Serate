@@ -1,7 +1,11 @@
 {
   "short_name": "SvoltaSerate",
   "name": "Svolta Serate",
-  "description": "Sovolta le serate per quando non hai nulla da fare",
+  "description": "Ti svolta le serate per quando non hai nulla da fare",
+  "start_url": ".",
+  "display": "fullscreen",
+  "theme_color": "#4caf50",
+  "background_color": "#1c273a",
   "icons": [
     {
       "src": "manifest-icons/manifest-icon-192.maskable.png",
@@ -27,9 +31,5 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ],
-  "start_url": ".",
-  "display": "fullscreen",
-  "theme_color": "#4caf50",
-  "background_color": "#1c273a"
+  ]
 }
