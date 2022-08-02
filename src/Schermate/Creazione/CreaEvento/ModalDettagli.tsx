@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 // web.cjs is required for IE11 support
 import { useSpring, animated } from 'react-spring/web.cjs';
 import DettaglioEvento, { DETTAGLI } from '../../../Utils/Classes/Evento/DettaglioEvento';
-import { IconButton, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
+import { Grid, IconButton, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import { forwardRef, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -140,7 +140,16 @@ const ModalDettagli = ({ dettagli, setDettagli, openButton, closeButtonText = "C
                             }
                         </div>
 
-                        <Button onClick={handleClose}>{closeButtonText}</Button>
+
+                        <Grid container justifyContent="space-evenly">
+                            <Grid item>
+                                <Button onClick={handleClose}>{closeButtonText}</Button>
+                            </Grid>
+                            <Grid item>
+                                <Button onClick={() => setOpen(false)}>Chiudi</Button>
+                            </Grid>
+                        </Grid>
+
                     </Box>
                 </Fade>
             </Modal>

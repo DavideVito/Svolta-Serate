@@ -11,7 +11,11 @@ import "./index.css"
 import { lazy } from "react"
 import UpperAppBar from "./Components/AppBar/UpperAppBar";
 import SuspenseWrapper from "./Components/SuspenseWrapper/SuspenseWrapper";
-import SignUp from "./Schermate/SignUp";
+import SignUp from "./Schermate/UserManagment/SignUp"
+import EmailVerified from "./Components/EmailVerified";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./Utils/Firebase/init";
+import NotificationComponent from "./Components/NotificationComponent";
 
 
 
@@ -20,10 +24,11 @@ import SignUp from "./Schermate/SignUp";
 const DettagliEvento = lazy(() => import("./Schermate/Visualizzazione/DettagliEvento"));
 const CreaEvento = lazy(() => import("./Schermate/Creazione/CreaEvento"))
 const CreaLocale = lazy(() => import("./Schermate/Creazione/CreaLocale"));
-const Login = lazy(() => import("./Schermate/Login"));
+const Login = lazy(() => import("./Schermate/UserManagment/Login"));
 const DettagliLocale = lazy(() => import("./Schermate/Visualizzazione/DettagliLocale"));
 const ListaEventi = lazy(() => import("./Schermate/Visualizzazione/ListaEventi"));
 const Mappa = lazy(() => import("./Schermate/Visualizzazione/Mappa"));
+const ResetPassword = lazy(() => import("./Schermate/UserManagment/ResetPassword"));
 
 
 
@@ -40,7 +45,14 @@ const App = () => {
     },
     {
       path: "/SignUp", element: <SuspenseWrapper>
+        <UpperAppBar text="Registrati" withBackButton={true} />
         <SignUp />
+      </SuspenseWrapper>
+    },
+    {
+      path: "/resetPassword", element: <SuspenseWrapper>
+        <UpperAppBar text="Reimposta Password" withBackButton={true} />
+        <ResetPassword />
       </SuspenseWrapper>
     },
     { path: "/creaEvento", element: <SuspenseWrapper ><CreaEvento /></SuspenseWrapper> },
@@ -116,7 +128,7 @@ const darkTheme = createTheme({
 
 const AppWrapper = () => {
 
-
+  const [user] = useAuthState(auth)
 
 
 
@@ -131,7 +143,9 @@ const AppWrapper = () => {
     <Router>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <EmailVerified user={user} />
         <App />
+        <NotificationComponent />
         <CustomAppBar />
       </ThemeProvider>
     </Router>

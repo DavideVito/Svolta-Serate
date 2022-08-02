@@ -1,13 +1,13 @@
 import { StyledFirebaseAuth } from "react-firebaseui";
 
-import { auth } from "../../Utils/Firebase/init"
+import { auth } from "../../../Utils/Firebase/init"
 
 import { useAuthState } from "react-firebase-hooks/auth"
 
 import { GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
 import UserPage from "../UserPage";
 
-import logo from "../../Images/logo.png"
+import logo from "../../../Images/logo.png"
 
 
 import * as React from 'react';
@@ -20,8 +20,11 @@ import Box from '@mui/material/Box';
 import { default as MUILink } from "@mui/material/Link"
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Divider } from "@mui/material";
+import { Alert, AlertTitle, Divider } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { parseError } from "../../../Utils/Functions/ParseError";
+import { FirebaseError } from "firebase/app";
 
 
 const uiConfig: firebaseui.auth.Config = {
@@ -48,10 +51,11 @@ function SignInScreen() {
 
   const [user, loading] = useAuthState(auth);
 
+  const [errore, setErrore] = useState<string | undefined>(undefined)
 
 
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -62,7 +66,12 @@ function SignInScreen() {
     if (!password) return
 
 
-    signInWithEmailAndPassword(auth, email.toString(), password.toString())
+    try {
+      await signInWithEmailAndPassword(auth, email.toString(), password.toString())
+
+    } catch (error) {
+      setErrore(parseError(error as FirebaseError))
+    }
   };
 
 
@@ -121,22 +130,38 @@ function SignInScreen() {
           >
             Accedi
           </Button>
+
+          {
+            errore && <Alert color="error" style={{ marginBottom: "1rem" }}>
+              <AlertTitle>Errore</AlertTitle>
+              {errore}
+            </Alert>
+
+
+          }
+
+
           <Grid container>
-            {/* <Grid item xs>
-              <Link to="#">
-                <MUILink>
-                  Password dimenticata?
-                </MUILink>
-              </Link>
-            </Grid> */}
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent="space-between">
+              <Grid item>
+                <Link to="/ResetPassword">
+                  <MUILink variant="body2">
+                    Password Dimenticata?
+                  </MUILink>
+                </Link>
+              </Grid>
+
+
               <Grid item>
                 <Link to="/SignUp">
                   <MUILink variant="body2">
                     {"Non hai un account? Registrati"}
                   </MUILink>
                 </Link>
-              </Grid></Grid>
+              </Grid>
+
+
+            </Grid>
           </Grid>
         </Box>
       </Box>

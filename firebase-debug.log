@@ -1,0 +1,84 @@
+[debug] [2022-08-01T23:27:15.185Z] ----------------------------------------------------------------------
+[debug] [2022-08-01T23:27:15.186Z] Command:       /Users/davidevitiello/.nvm/versions/node/v16.15.1/bin/node /Users/davidevitiello/.nvm/versions/node/v16.15.1/bin/firebase init functions
+[debug] [2022-08-01T23:27:15.186Z] CLI Version:   11.4.0
+[debug] [2022-08-01T23:27:15.186Z] Platform:      darwin
+[debug] [2022-08-01T23:27:15.186Z] Node Version:  v16.15.1
+[debug] [2022-08-01T23:27:15.189Z] Time:          Tue Aug 02 2022 01:27:15 GMT+0200 (Ora legale dell’Europa centrale)
+[debug] [2022-08-01T23:27:15.190Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-08-01T23:27:15.217Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-08-01T23:27:15.217Z] > authorizing via signed-in user (lgvitiello9@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/davidevitiello/Desktop/SvoltaSerate/svolta-serate
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2022-08-01T23:27:15.219Z] Using project from CLI flag: intresting-2cfb2
+[debug] [2022-08-01T23:27:15.220Z] > refreshing access token with scopes: []
+[debug] [2022-08-01T23:27:15.220Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2022-08-01T23:27:15.221Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2022-08-01T23:27:15.463Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2022-08-01T23:27:15.463Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2022-08-01T23:27:15.506Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/intresting-2cfb2 [none]
+[debug] [2022-08-01T23:27:15.881Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/intresting-2cfb2 200
+[debug] [2022-08-01T23:27:15.881Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/intresting-2cfb2 {"projectId":"intresting-2cfb2","projectNumber":"23725437785","displayName":"intresting-events","name":"projects/intresting-2cfb2","resources":{"hostingSite":"intresting-2cfb2","storageBucket":"intresting-2cfb2.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_f08021ea-4735-4e03-be54-1dcd4dc94f7c"}
+[info] i  Using project intresting-2cfb2 (intresting-events) 
+[info] 
+=== Functions Setup
+[info] 
+[info] A functions directory will be created in your project with sample code
+[info] pre-configured. Functions can be deployed with firebase deploy.
+[info] 
+[debug] [2022-08-01T23:27:15.903Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-08-01T23:27:15.903Z] > authorizing via signed-in user (lgvitiello9@gmail.com)
+[debug] [2022-08-01T23:27:15.903Z] [iam] checking project intresting-2cfb2 for permissions ["firebase.projects.get"]
+[debug] [2022-08-01T23:27:15.903Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/intresting-2cfb2:testIamPermissions [none]
+[debug] [2022-08-01T23:27:15.904Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/intresting-2cfb2:testIamPermissions x-goog-quota-user=projects/intresting-2cfb2
+[debug] [2022-08-01T23:27:15.904Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/intresting-2cfb2:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2022-08-01T23:27:16.713Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/intresting-2cfb2:testIamPermissions 200
+[debug] [2022-08-01T23:27:16.713Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/intresting-2cfb2:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2022-08-01T23:27:16.714Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/cloudfunctions.googleapis.com [none]
+[debug] [2022-08-01T23:27:16.716Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/runtimeconfig.googleapis.com [none]
+[debug] [2022-08-01T23:27:17.768Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/cloudfunctions.googleapis.com 200
+[debug] [2022-08-01T23:27:17.768Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2022-08-01T23:27:17.769Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/cloudfunctions.googleapis.com:enable [none]
+[debug] [2022-08-01T23:27:17.778Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/runtimeconfig.googleapis.com 200
+[debug] [2022-08-01T23:27:17.779Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2022-08-01T23:27:19.365Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/cloudfunctions.googleapis.com:enable 200
+[debug] [2022-08-01T23:27:19.366Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/cloudfunctions.googleapis.com:enable [omitted]
+[debug] [2022-08-01T23:27:29.368Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/cloudfunctions.googleapis.com [none]
+[debug] [2022-08-01T23:27:30.375Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/cloudfunctions.googleapis.com 200
+[debug] [2022-08-01T23:27:30.375Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/intresting-2cfb2/services/cloudfunctions.googleapis.com [omitted]
+[info] ✔  Wrote functions/package.json 
+[info] ✔  Wrote functions/.eslintrc.js 
+[info] ✔  Wrote functions/tsconfig.json 
+[info] ✔  Wrote functions/tsconfig.dev.json 
+[info] ✔  Wrote functions/src/index.ts 
+[info] ✔  Wrote functions/.gitignore 
+[info] 
+[info] i  Writing configuration info to firebase.json... 
+[debug] [2022-08-01T23:27:38.837Z] Error: EACCES: permission denied, open '/Users/davidevitiello/Desktop/SvoltaSerate/svolta-serate/firebase.json'
+    at Object.openSync (node:fs:585:3)
+    at Object.writeFileSync (node:fs:2170:35)
+    at Config.writeProjectFile (/Users/davidevitiello/.nvm/versions/node/v16.15.1/lib/node_modules/firebase-tools/lib/config.js:153:12)
+    at /Users/davidevitiello/.nvm/versions/node/v16.15.1/lib/node_modules/firebase-tools/lib/commands/init.js:170:16
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[error] 
+[error] Error: An unexpected error has occurred.

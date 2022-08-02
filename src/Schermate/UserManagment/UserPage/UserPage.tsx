@@ -2,12 +2,14 @@ import { Card, CardContent, Typography } from "@mui/material";
 import { User } from "firebase/auth";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Loading from "../../Components/Loading";
-import UserCard from "../../Components/Card/UserCard"
-import Evento from "../../Utils/Classes/Evento";
-import Locale from "../../Utils/Classes/Locale";
-import { auth } from "../../Utils/Firebase/init";
-import { formattaData } from "../../Utils/Functions/Formattatori";
+import Loading from "../../../Components/Loading";
+import UserCard from "../../../Components/Card/UserCard"
+import Evento from "../../../Utils/Classes/Evento";
+import Locale from "../../../Utils/Classes/Locale";
+import { auth } from "../../../Utils/Firebase/init";
+import { formattaData } from "../../../Utils/Functions/Formattatori";
+import GestisciNotifiche from "./GestisciNotifiche";
+import { isSupported } from "firebase/messaging";
 
 
 const EventiCreatiComponent = ({ user }: { user: User }) => {
@@ -18,7 +20,7 @@ const EventiCreatiComponent = ({ user }: { user: User }) => {
         Evento.getEventiCreatiDaUtente(user).then((eventi) => setEventiCreati(eventi))
     }, [user])
 
-    if (!eventiCreati) return <div></div>
+    if (!eventiCreati) return <></>
 
     if (!eventiCreati.length) return <></>
 
@@ -72,7 +74,7 @@ const LocaliCreatiComponent = ({ user }: { user: User }) => {
 
     }, [user])
 
-    if (!localiCreati) return <div>Nessun locale creato</div>
+    if (!localiCreati) return <></>
 
     if (!localiCreati.length) return <></>
 
@@ -125,6 +127,13 @@ const UserPage = () => {
 
     const [user, loading] = useAuthState(auth);
 
+
+    const [showNotifiche, setShowNotifiche] = useState(false)
+
+    useEffect(() => {
+        isSupported().then(setShowNotifiche)
+    }, [])
+
     if (loading) return <Loading />
 
     if (!user) return <div>Devi essere loggato</div>
@@ -132,13 +141,16 @@ const UserPage = () => {
     return <div style={{ display: "flex", flexDirection: "column", gap: "1rem", paddingBottom: "5rem" }}>
 
         <UserCard user={user} logout={() => auth.signOut()} />
+
+        {
+            showNotifiche && <GestisciNotifiche user={user} />
+        }
+
+
         <UserEvents user={user} />
 
 
     </div>
-
-
-
 
 }
 export default UserPage

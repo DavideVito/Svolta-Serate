@@ -11,6 +11,7 @@ import { initializeFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage"
 import { getMessaging } from "firebase/messaging"
 import { getAnalytics } from "firebase/analytics"
+import { getFunctions } from "firebase/functions"
 
 
 const firebaseConfig = {
@@ -34,6 +35,7 @@ export const auth = getAuth(app)
 export const firestore = initializeFirestore(app, { ignoreUndefinedProperties: true })
 export const storage = getStorage(app)
 export const messaging = getMessaging(app)
+export const functions = getFunctions(app)
 
 
 

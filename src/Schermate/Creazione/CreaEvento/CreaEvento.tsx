@@ -1,5 +1,6 @@
 import { Alert, AlertTitle, Button, MenuItem, Select, TextField } from "@mui/material";
 import { User } from "firebase/auth";
+import { UploadTaskSnapshot, StorageError, getDownloadURL } from "firebase/storage";
 import { useFormik } from 'formik';
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -7,11 +8,13 @@ import { Navigate } from "react-router-dom";
 import * as Yup from "yup"
 import UpperAppBar from "../../../Components/AppBar/UpperAppBar";
 import DateInput from "../../../Components/DateInput";
+import FileUploader from "../../../Components/FileUploader";
 import Loading from "../../../Components/Loading";
 import Evento from "../../../Utils/Classes/Evento";
 import DettaglioEvento from "../../../Utils/Classes/Evento/DettaglioEvento";
 import Locale, { Posizione } from "../../../Utils/Classes/Locale";
 import { auth } from "../../../Utils/Firebase/init";
+import { uploadFile } from "../../../Utils/Functions/UploadFile";
 import { DettaglioEventoView } from "../../Visualizzazione/DettagliEvento/DettaglioEventoView";
 import ModalDettagli from "./ModalDettagli";
 
@@ -42,6 +45,8 @@ const CreaEvento = () => {
     const [erroreCreazione, setErroreCreazione] = useState<any | undefined>(undefined)
     const [dataInizio, setDataInizio] = useState<Date | undefined>(undefined)
     const [dettagli, setDettagli] = useState<(DettaglioEvento<any> | null)[]>([])
+    const [file, setFile] = useState<File | undefined>(undefined)
+    const [progresso, setProgresso] = useState<number | undefined>(undefined)
 
 
 
@@ -65,7 +70,7 @@ const CreaEvento = () => {
             linkLocandina: ""
         },
         validationSchema: CreaEventoSchema,
-        onSubmit: (
+        onSubmit: async (
             values: Values
         ) => {
             const locale = locali.find(locale => locale.id === values.idLocale)
@@ -76,23 +81,29 @@ const CreaEvento = () => {
             if (!dataInizio) return
 
 
-            // const upload = uploadFile({ cartella: "immagini/eventi/locandine/", file })
+            let donwloadUrl = ""
+
+            if (file) {
+                const upload = uploadFile({ cartella: "immagini/eventi/locandine/", file })
 
 
-            // upload.on("state_changed", (snapshot: UploadTaskSnapshot) => {
+                upload.on("state_changed", (snapshot: UploadTaskSnapshot) => {
+                    const { totalBytes, bytesTransferred } = snapshot
+                    const percentuale = (bytesTransferred / totalBytes) * 100
+                    setProgresso(percentuale)
+                }, (e: StorageError) => {
 
-            //     const { totalBytes, bytesTransferred } = snapshot
+                    setErroreCreazione(e)
+                    setTimeout(() => { setErroreCreazione(undefined) }, 5000)
+
+                })
+
+                const uploaded = await upload
+
+                donwloadUrl = await getDownloadURL(uploaded.ref)
+            }
 
 
-            //     const percentuale = (bytesTransferred / totalBytes) * 100
-            //     console.log(percentuale)
-            // }, (e: StorageError) => {
-
-            //     setErroreCreazione(e)
-            //     setTimeout(() => { setErroreCreazione(undefined) }, 5000)
-
-            // }, async () => {
-            //     const downloadUrl = await getDownloadURL(upload.snapshot.ref)
 
             const dettagliFiltered = dettagli.filter(d => d !== null) as DettaglioEvento<any>[]
 
@@ -104,14 +115,16 @@ const CreaEvento = () => {
                     creatore: user,
                     locale: locale,
                     linkLocandina: values.linkLocandina,
-                    foto: "",
+                    foto: donwloadUrl,
                     dettagli: dettagliFiltered
                 })
 
             evento.save().then(() => {
                 setEventoCreato(evento)
-
                 setTimeout(() => { setEventoCreato(undefined) }, 5000)
+
+                setFile(undefined)
+                setProgresso(undefined)
 
                 formik.resetForm()
             }).catch((e) => {
@@ -217,7 +230,7 @@ const CreaEvento = () => {
                     })
                 }
             </div>
-            {/* <FileUploader setFile={setFile} /> */}
+            <FileUploader setFile={setFile} progresso={progresso} />
 
             <Button color="primary" variant="contained" fullWidth type="submit">
                 Crea Evento

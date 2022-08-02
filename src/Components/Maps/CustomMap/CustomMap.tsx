@@ -53,7 +53,7 @@ const CustomMap = React.forwardRef<MapRef, CustomMapProps>((
 
 
     return <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet" />
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css" rel="stylesheet" />
         <div style={{ justifyContent: "center", display: "flex" }}>
             <Map ref={ref}
                 style={{ ...widthHeight }}

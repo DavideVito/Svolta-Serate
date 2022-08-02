@@ -8,16 +8,16 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
-import logo from "../../Images/logo.png"
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { analytics, auth } from '../../Utils/Firebase/init';
+import logo from "../../../Images/logo.png"
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
+import { analytics, auth } from '../../../Utils/Firebase/init';
 import { useState } from 'react';
 import { Snackbar } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { default as MUILink } from "@mui/material/Link"
 import { logEvent } from 'firebase/analytics';
-import FileUploader from '../../Components/FileUploader';
-import { uploadFile } from '../../Utils/Functions/UploadFile';
+import FileUploader from '../../../Components/FileUploader';
+import { uploadFile } from '../../../Utils/Functions/UploadFile';
 import { UploadTaskSnapshot, StorageError, getDownloadURL } from 'firebase/storage';
 
 export default function SignUp() {
@@ -76,6 +76,7 @@ export default function SignUp() {
 
                 logEvent(analytics, "user_signup", { email: user.email })
                 await updateProfile(user, { displayName: nome.toString(), photoURL: linkFoto })
+                await sendEmailVerification(user)
 
                 window.location.href = "/login"
             })
@@ -95,7 +96,7 @@ export default function SignUp() {
                 message={messaggio}
             />
 
-            <Container component="main" maxWidth="xs" style={{ overflow: "auto", display: "flex", marginBottom: "2rem" }}>
+            <Container component="main" maxWidth="xs" style={{ overflow: "auto", display: "flex", marginBottom: "4rem" }}>
                 <CssBaseline />
                 <Box
                     sx={{
@@ -109,7 +110,7 @@ export default function SignUp() {
                         <img src={logo} style={{ width: "80%", height: "80%" }} alt="" />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Accedi
+                        Registrati
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
@@ -157,7 +158,7 @@ export default function SignUp() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Accedi
+                            Registrati
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
